@@ -13,82 +13,78 @@
     <div class="testbox">
       <form action="/">
         <div class="banner">
-          <h1>Conference Room Reservation</h1>
+          <h1>Didcord Time Tag Generator</h1>
         </div>
-        <div class="item">
-          <label for="name">Name<span>*</span></label>
-          <input id="name" type="text" name="name" required />
+        <div>
+          <table>
+            <tbody>
+              <tr>
+                <th>Year</th>
+                <th>Month</th>
+                <th>Day</th>
+                <th>HH</th>
+                <th>MM</th>
+                <th>SS</th>
+                <th></th>
+                <th>UTC</th>
+              </tr>
+              <tr>
+                <td><input type="number" name="Year" required /></td>
+                <td><input type="number" name="Month" required /></td>
+                <td><input type="number" name="Day" required /></td>
+                <td><input type="number" name="HH" required /></td>
+                <td><input type="number" name="MM" required /></td>
+                <td><input type="number" name="SS" required /></td>
+                <td><select>
+                    <option selected value="" disabled selected></option>
+                    <option value="AM">AM</option>
+                    <option value="PM">PM</option>
+                  </select></td>
+                <td><select>
+                    <option selected value="" disabled selected></option>
+                    <option value="-12">UTC -12</option>
+                    <option value="-11">UTC -11</option>
+                    <option value="-10">UTC -10</option>
+                    <option value="-9.5">UTC -9:30</option>
+                    <option value="-9">UTC -9</option>
+                    <option value="-8">UTC -8</option>
+                    <option value="-7">UTC -7</option>
+                    <option value="-6">UTC -6</option>
+                    <option value="-5">UTC -5</option>
+                    <option value="-4">UTC -4</option>
+                    <option value="-3">UTC -3</option>
+                    <option value="-2.5">UTC -2:30</option>
+                    <option value="-2">UTC -2</option>
+                    <option value="-1">UTC -1</option>
+                    <option value="0">UTC +0</option>
+                    <option value="1">UTC +1</option>
+                    <option value="2">UTC +2</option>
+                    <option value="3">UTC +3</option>
+                    <option value="4">UTC +4</option>
+                    <option value="4.5">UTC +4:30</option>
+                    <option value="5">UTC +5</option>
+                    <option value="5.5">UTC +5:30</option>
+                    <option value="5.75">UTC +5:45</option>
+                    <option value="6">UTC +6</option>
+                    <option value="6.5">UTC +6:30</option>
+                    <option value="7">UTC +7</option>
+                    <option value="8">UTC +8</option>
+                    <option value="8.75">UTC +8:45</option>
+                    <option value="9">UTC +9</option>
+                    <option value="9.5">UTC +9:30</option>
+                    <option value="10">UTC +10</option>
+                    <option value="10.5">UTC +10:30</option>
+                    <option value="11">UTC +11</option>
+                    <option value="12">UTC +12</option>
+                    <option value="12.75">UTC +12:45</option>
+                    <option value="13">UTC +13</option>
+                    <option value="14">UTC +14</option>
+                  </select></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="item">
-          <label for="email">Email Address<span>*</span></label>
-          <input id="email" type="email" name="email" required />
-        </div>
-        <div class="item">
-          <label for="attendees">Number of Attendees <span>*</span></label>
-          <input id="attendess" type="text" name="attendees" required />
-        </div>
-        <div class="item">
-          <label for="position">Position<span>*</span></label>
-          <input id="position" type="text" name="position" required />
-        </div>
-        <div class="item">
-          <label for="department">Department<span>*</span></label>
-          <input id="department" type="text" name="department" required />
-        </div>
-        <div class="item">
-          <label for="phone">Phone<span>*</span></label>
-          <input id="phone" type="number" placeholder="(XXX) XXX-XXXX" name="phone" required />
-        </div>
-        <div class="item">
-          <label for="bdate">Date<span>*</span></label>
-          <input id="bdate" type="date" name="bdate" required />
-          <i class="fas fa-calendar-alt"></i>
-        </div>
-        <div class="flax">
-          <div class="item">
-            <p>Start Time</p>
-            <select>
-              <option selected value="" disabled selected></option>
-              <option value="8A">8 AM</option>
-              <option value="9A">9 AM</option>
-              <option value="10A">10 AM</option>
-              <option value="11A">11 Am</option>
-              <option value="12P">12 Pm</option>
-              <option value="1P">1 Pm</option>
-              <option value="2P">2 Pm</option>
-              <option value="3P">3 Pm</option>
-              <option value="4P">4 Pm</option>
-              <option value="5P">5 Pm</option>
-              <option value="6P">6 Pm</option>
-              <option value="7P">7 Pm</option>
-              <option value="8P">8 Pm</option>
-            </select>
-          </div>
-          <div class="item">
-            <p>End Time</p>
-            <select>
-              <option selected value="" disabled selected></option>
-              <option value="8A">8 AM</option>
-              <option value="9A">9 AM</option>
-              <option value="10A">10 AM</option>
-              <option value="11A">11 Am</option>
-              <option value="12P">12 Pm</option>
-              <option value="1P">1 Pm</option>
-              <option value="2P">2 Pm</option>
-              <option value="3P">3 Pm</option>
-              <option value="4P">4 Pm</option>
-              <option value="5P">5 Pm</option>
-              <option value="6P">6 Pm</option>
-              <option value="7P">7 Pm</option>
-              <option value="8P">8 Pm</option>
-            </select>
-          </div>
-        </div>
-        <div class="item">
-          <label for="instructions">Special Instructions</label>
-          <textarea id="instructions" rows="3"></textarea>
-        </div>
-        <p><small>0/100 characters</small></p>
+
         <div class="btn-block">
           <button type="submit" href="/">Submit</button>
         </div>
