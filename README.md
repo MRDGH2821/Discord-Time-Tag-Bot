@@ -1,2 +1,2 @@
-# Discord Time Tags
- Discord Time Tags made easy!
+# Discord Time Tag Bot
+Generating Discord Time Tags made easy!
