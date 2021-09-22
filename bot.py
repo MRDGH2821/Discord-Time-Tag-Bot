@@ -39,12 +39,15 @@ async def on_ready():
 @slash.slash(name="Ping", description="Shows Bot Latency")
 async def ping(ctx):
     await ctx.send(f'Bot Speed - {round(client.latency * 1000)}ms ')
-    '''
-    embed = discord.Embed(
-    title=f"Avtar of {ctx.author.display_name}",
-    color=discord.Color.teal()
-    ).set_image(url=ctx.author.avatar_url)
 
+'''
+@slash.slash(name="PingV2", description="Shows Bot Latency, in fancy way")
+async def pingfancy(ctx):
+    embed = discord.Embed(
+        title=f"Ping",
+        color=discord.Color.teal(),
+        description=f"Bot Speed - {round(client.latency * 1000)}ms"
+    )
     await ctx.send(embed=embed)
 '''
 client.run(TOKEN)
