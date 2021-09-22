@@ -1,16 +1,26 @@
+import logging
 import os
 
 import discord
+from discord_slash import SlashCommand
 from dotenv import load_dotenv
 
-from discord_slash import SlashCommand
+logger = logging.getLogger('discord')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(
+    filename='discord.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter(
+    '%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
+
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 
 client = discord.Client()
-slash=SlashCommand(client, sync_commands=True)
+slash = SlashCommand(client, sync_commands=True)
+
 
 @client.event
 async def on_ready():
@@ -25,7 +35,8 @@ async def on_ready():
     )
     print("Slasher ready!")
 
-@slash.slash(name="Latency", description="Shows Bot Latency")
+
+@slash.slash(name="Ping", description="Shows Bot Latency")
 async def ping(ctx):
     await ctx.send(f'Bot Speed - {round(client.latency * 1000)}ms ')
     '''
