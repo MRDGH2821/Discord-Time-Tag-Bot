@@ -1,3 +1,4 @@
 .env
 discord.log
 config.json
+node_modules
