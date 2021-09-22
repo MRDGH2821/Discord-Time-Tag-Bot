@@ -1,0 +1,30 @@
+{
+  "name": "discord-time-tag-bot",
+  "version": "1.0.0",
+  "description": "Generating Discord Time Tags made easy!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MRDGH2821/Discord-Time-Tag-Bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MRDGH2821/Discord-Time-Tag-Bot/issues"
+  },
+  "homepage": "https://github.com/MRDGH2821/Discord-Time-Tag-Bot#readme",
+  "dependencies": {
+    "@discordjs/builders": "^0.6.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "discord-api-types": "^0.23.1",
+    "discord.js": "^13.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0"
+  }
+}
