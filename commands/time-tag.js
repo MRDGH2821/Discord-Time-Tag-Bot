@@ -3,14 +3,14 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('time-tag')
-		.setDescription('Generates Time tag!')
+		.setDescription('Generates Time tag in your local TimeZone!')
 		.addIntegerOption(option =>
 			option.setName('year')
-				.setDescription('Year in 4 digits')
+				.setDescription('Enter Year in YYYY format')
 				.setRequired(true))
 		.addIntegerOption(option =>
 			option.setName('month')
-				.setDescription('Month in 2 digits')
+				.setDescription('Enter Month in MM format')
 				.setRequired(true)
 				.addChoice('1', 1)
 				.addChoice('2', 2)
@@ -27,29 +27,76 @@ module.exports = {
 		)
 		.addIntegerOption(option =>
 			option.setName('day')
-				.setDescription('Day in 2 digits')
+				.setDescription('Enter Day in DD format')
 				.setRequired(true),
 		)
 		.addIntegerOption(option =>
-			option.setName('hour')
-				.setDescription('Hour in 2 digits')
+			option.setName('hours')
+				.setDescription('Enter Hours in 24-hour format')
 				.setRequired(true))
 		.addIntegerOption(option =>
-			option.setName('min')
-				.setDescription('Minutes in 2 digits')
-				.setRequired(true)),
+			option.setName('minutes')
+				.setDescription('Enter Minutes')
+				.setRequired(true),
+		),
 	async execute(interaction) {
 
 		const year = interaction.options.getInteger('year');
 		const month = interaction.options.getInteger('month');
 		const day = interaction.options.getInteger('day');
-		const hour = interaction.options.getInteger('hour');
-		const min = interaction.options.getInteger('min');
+		const hour = interaction.options.getInteger('hours');
+		const min = interaction.options.getInteger('minutes');
 		const epoch = new Date(year, month - 1, day, hour, min).valueOf() / 1000;
 		if (epoch) return interaction.reply(`Time Tag: \`${epoch}\` \n<t:${epoch}> \n Year: ${year} Month: ${month} Day: ${day} Hour: ${hour} Minute: ${min}`);
 		return interaction.reply('uhhh');
 	},
 };
+
+/* Timezone Choices from time.is site
+
+.addIntegerOption(option =>
+	option.setName('timezone')
+		.setDescription('Enter TimeZone Offset (By default it is in your local TimeZone)')
+		.addChoice('-12', 1)
+		.addChoice('-11', 2)
+		.addChoice('-10', 3)
+		.addChoice('-9:30', 4)
+		.addChoice('-9', 5)
+		.addChoice('-8', 6)
+		.addChoice('-7', 7)
+		.addChoice('-6', 8)
+		.addChoice('-5', 9)
+		.addChoice('-4', 10)
+		.addChoice('-3', 11)
+		.addChoice('-2:30', 12)
+		.addChoice('-2', 13)
+		.addChoice('-1', 14)
+		.addChoice('0', 15)
+		.addChoice('+1', 16)
+		.addChoice('+2', 17)
+		.addChoice('+3', 18)
+		.addChoice('+3:30', 19)
+		.addChoice('+4', 20)
+		.addChoice('+4:30', 21)
+		.addChoice('+5', 22)
+		.addChoice('+5:30', 23)
+		.addChoice('+5:45', 24)
+		.addChoice('+6', 25)
+		.addChoice('+6:30', 26)
+		.addChoice('+7', 27)
+		.addChoice('+8', 28)
+		.addChoice('+8:45', 29)
+		.addChoice('+9', 30)
+		.addChoice('+9:30', 31)
+		.addChoice('+10', 32)
+		.addChoice('+10:30', 33)
+		.addChoice('+11', 34)
+		.addChoice('+12', 35)
+		.addChoice('+12:45', 36)
+		.addChoice('+13', 37)
+		.addChoice('+14', 38),
+
+		*/
 
 /*  Date choices
 
