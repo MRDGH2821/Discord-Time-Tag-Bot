@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const dayjs = require('dayjs');
+const arraySupport = require('dayjs/plugin/arraySupport');
+dayjs.extend(arraySupport);
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -47,8 +49,9 @@ module.exports = {
 		const day = interaction.options.getInteger('day');
 		const hour = interaction.options.getInteger('hours');
 		const min = interaction.options.getInteger('minutes');
-		const epoch = dayjs('${year} ${month - 1} ${day} ${hour} ${min}', 'YYYY MM DD HH mm').unix() / 1000;
-		if (epoch) return interaction.reply(`Time Tag: \`${epoch}\` \n<t:${epoch}> \n Year: ${year} Month: ${month} Day: ${day} Hour: ${hour} Minute: ${min}`);
+		const daystr = new Date(year, month - 1, day, hour, min);
+		const epoch = dayjs(daystr).unix();
+		if (epoch) return interaction.reply(`Time String: ${daystr} \nTime Tag: \`${epoch}\` \n<t:${epoch}> \n Year: ${year} Month: ${month} Day: ${day} Hour: ${hour} Minute: ${min}`);
 		return interaction.reply('uhhh, an error occured');
 	},
 };
