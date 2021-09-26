@@ -1,9 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const dayjs = require('dayjs');
+const customParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(customParseFormat);
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('time-tag')
-		.setDescription('Generates Time tag in your local TimeZone!')
+		.setName('time_tag')
+		.setDescription('Generates Time tag in your local TimeZone! Simple & Easy!')
 		.addIntegerOption(option =>
 			option.setName('year')
 				.setDescription('Enter Year in YYYY format')
@@ -32,13 +35,33 @@ module.exports = {
 		)
 		.addIntegerOption(option =>
 			option.setName('hours')
-				.setDescription('Enter Hours in 24-hour format')
-				.setRequired(true))
+				.setDescription('Enter Hours in 12-hour format')
+				.setRequired(true)
+				.addChoice('1', 1)
+				.addChoice('2', 2)
+				.addChoice('3', 3)
+				.addChoice('4', 4)
+				.addChoice('5', 5)
+				.addChoice('6', 6)
+				.addChoice('7', 7)
+				.addChoice('8', 8)
+				.addChoice('9', 9)
+				.addChoice('10', 10)
+				.addChoice('11', 11)
+				.addChoice('12', 12),
+		)
 		.addIntegerOption(option =>
 			option.setName('minutes')
 				.setDescription('Enter Minutes')
 				.setRequired(true),
+		).addStringOption(option =>
+			option.setName('meridiem')
+				.setDescription('Ante or Post meridiem (AM or PM)')
+				.setRequired(true)
+				.addChoice('am', 'am')
+				.addChoice('pm', 'pm'),
 		),
+
 	async execute(interaction) {
 
 		const year = interaction.options.getInteger('year');
@@ -46,9 +69,21 @@ module.exports = {
 		const day = interaction.options.getInteger('day');
 		const hour = interaction.options.getInteger('hours');
 		const min = interaction.options.getInteger('minutes');
-		const epoch = new Date(year, month - 1, day, hour, min).valueOf() / 1000;
-		if (epoch) return interaction.reply(`Time Tag: \`${epoch}\` \n<t:${epoch}> \n Year: ${year} Month: ${month} Day: ${day} Hour: ${hour} Minute: ${min}`);
-		return interaction.reply('uhhh');
+		const meridiem = interaction.options.getString('meridiem');
+
+		const daystr = year + ' ' + month + ' ' + day + ' ' + hour + ' ' + min + ' ' + meridiem;
+		const epoch = dayjs(daystr, 'YYYY M D HH m a').unix();
+
+		try {
+
+			await interaction.reply(`Time Epoch: \`${epoch}\` \nTime Tag: <t:${epoch}> \nYear: ${year} Month: ${month} Day: ${day} Hour: ${hour} Minute: ${min} ${meridiem}`);
+			await interaction.followUp(`\`<t:${epoch}>\``);
+		}
+		catch (error) {
+			console.error(error);
+			return interaction.reply(`Uhhh, sorry an error occured. Please use /help command & reach out bot developer with error screenshot.\nError dump: ${error}`);
+
+		}
 	},
 };
 

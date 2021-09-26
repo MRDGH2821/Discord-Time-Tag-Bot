@@ -1,13 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const dayjs = require('dayjs');
-const arraySupport = require('dayjs/plugin/arraySupport');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
-dayjs.extend(arraySupport);
 dayjs.extend(customParseFormat);
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('time-tag-dayjs')
+		.setName('time_tag_advanced')
 		.setDescription('Generates Time tag in your local TimeZone!')
 		.addIntegerOption(option =>
 			option.setName('year')
@@ -78,26 +76,17 @@ module.exports = {
 		const min = interaction.options.getInteger('minutes');
 		const meridiem = interaction.options.getString('meridiem');
 		const utcOff = interaction.options.getString('utc');
-		/* Old Implementation
-		const daystr = new Date(year, month - 1, day, hour, min);
 
-		// const strsplit = daystr.split(' ');
-		const epoch = dayjs(daystr).unix();
-		if (epoch) return interaction.reply(`Time String: ${daystr} \nTime Tag: \`${epoch}\` \n<t:${epoch}> \n Year: ${year} Month: ${month} Day: ${day} Hour: ${hour} Minute: ${min}`);
-*/
-		const daystr2 = year + ' ' + month + ' ' + day + ' ' + hour + ' ' + min + ' ' + meridiem + ' ' + utcOff;
-		const epoch2 = dayjs(daystr2, 'YYYY M D HH m a Z').unix();
+		const daystr = year + ' ' + month + ' ' + day + ' ' + hour + ' ' + min + ' ' + meridiem + ' ' + utcOff;
+		const epoch = dayjs(daystr, 'YYYY M D HH m a Z').unix();
 
 		try {
-
-			/*	if (epoch2) */
-			return interaction.reply(`Time String: ${daystr2} \nTime Tag: \`${epoch2}\` \n<t:${epoch2}> \n Year: ${year} Month: ${month} Day: ${day} Hour: ${hour} Minute: ${min} ${meridiem} UTC: ${utcOff}`);
-		//	return interaction.reply('uhhh, an error occured');
+			await interaction.reply(`Time String: ${daystr} \nTime Epoch: \`${epoch}\` \n<t:${epoch}> \n Year: ${year} Month: ${month} Day: ${day} Hour: ${hour} Minute: ${min} ${meridiem} UTC: ${utcOff}`);
+			await interaction.followUp(`\`<t:${epoch}>\``);
 		}
 		catch (error) {
 			console.error(error);
 			return interaction.reply(`Uhhh, sorry an error occured. Please use /help command & reach out bot developer with error screenshot.\nError dump: ${error}`);
-
 		}
 	},
 };
