@@ -24,6 +24,6 @@ module.exports = {
 		.setDescription('The help section to get you started!'),
 
 	async execute(interaction) {
-		await interaction.send({ embeds:[helpEmbed] });
+		await interaction.reply({ embeds:[helpEmbed] });
 	},
 };
