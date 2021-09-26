@@ -6,7 +6,7 @@ dayjs.extend(customParseFormat);
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('time_tag_advanced')
-		.setDescription('Generates Time tag in your local TimeZone!')
+		.setDescription('Generates Time tag in custom TimeZone!')
 		.addIntegerOption(option =>
 			option.setName('year')
 				.setDescription('Enter Year in YYYY format')
