@@ -26,3 +26,8 @@ For more info click [here](https://discordjs.guide/preparations/setting-up-a-bot
 [MIT](./LICENSE)
 
 Feel free to make your own improved version of the bot!
+
+## Icon
+
+Icon was made using Canva.
+See here in [High resolution](https://www.canva.com/design/DAErTZ1ecBg/BPsoFLzK_b1pytITetgrww/view?utm_content=DAErTZ1ecBg&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink)
