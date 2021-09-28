@@ -15,7 +15,7 @@ const helpEmbed = new MessageEmbed()
 		{ name: 'Minutes', value: 'Same input rules as month' },
 		{ name: 'Meridien', value: 'Ante meridien or Post Meridien (`AM` or `PM`)' },
 		{ name: 'UTC', value: 'Takes value in UTC Offset. For example -> `+05:00` or `-06:30` or `+00:00`. It is syntax sensitive. That means, you have to explictly put sign (`+` or `-`) & the trailing zeros.' },
-		{ name: 'Bot still not working?', value: 'Please join my [server](https://discord.gg/MPtE9zsBs5) & elaborate how you encountered that problem. Incase you are running out of time you may click [here](https://hammertime.djdavid98.art/). *Btw this site is not affliated with bot developer in any way, it was linked here to reduce your wasted time.*' },
+		{ name: 'Bot still not working?', value: 'Please join my [server](https://discord.gg/MPtE9zsBs5) & elaborate how you encountered that problem. Incase you are running out of time you may click [here](https://hammertime.djdavid98.art/). You may also submit an issue at [Github Repository](https://github.com/MRDGH2821/Discord-Time-Tag-Bot/issues) \n\n*Btw this site is not affliated with bot developer in any way, it was linked here to reduce your wasted time.*' },
 	);
 
 const row = new MessageActionRow()
@@ -26,9 +26,19 @@ const row = new MessageActionRow()
 			.setURL('https://discord.gg/MPtE9zsBs5'))
 	.addComponents(
 		new MessageButton()
+			.setLabel('Submit an Issue at GitHub')
+			.setStyle('LINK')
+			.setURL('https://github.com/MRDGH2821/Discord-Time-Tag-Bot/issues'))
+	.addComponents(
+		new MessageButton()
 			.setLabel('Backup Time Tag Generator')
 			.setStyle('LINK')
-			.setURL('https://hammertime.djdavid98.art/'),
+			.setURL('https://hammertime.djdavid98.art/'))
+	.addComponents(
+		new MessageButton()
+			.setLabel('GitHub Repository')
+			.setStyle('LINK')
+			.setURL('https://github.com/MRDGH2821/Discord-Time-Tag-Bot'),
 	);
 
 module.exports = {
