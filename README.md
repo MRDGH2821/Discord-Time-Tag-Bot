@@ -20,3 +20,9 @@ Bot Permissions -
 
 
 For more info click [here](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot) & [here](https://discordjs.guide/creating-your-bot/)
+
+## Licence
+
+[MIT](./LICENSE)
+
+Feel free to make your own improved version of the bot!
