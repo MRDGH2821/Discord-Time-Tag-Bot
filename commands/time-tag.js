@@ -74,9 +74,34 @@ module.exports = {
 		const daystr = year + ' ' + month + ' ' + day + ' ' + hour + ' ' + min + ' ' + meridiem;
 		const epoch = dayjs(daystr, 'YYYY M D HH m a').unix();
 
-		try {
+		const tagOutput = {
+			color: 0x0099ff,
+			title: 'Time Tag Generated!',
+			description: 'Following are the inputs given!',
+			fields: [
+				{
+					name: 'Time Epoch',
+					value: `\`${epoch}\``,
+				},
+				{
+					name: 'Time Tag',
+					value: `<t:${epoch}>`,
+				},
+				{
+					name: 'Date',
+					value: `${year}-${month}-${day}`,
+				},
+				{
+					name: 'Time',
+					value: `${hour}:${min} ${meridiem} (In your local TimeZone)`,
+				},
+			],
+			timestamp: new Date(),
 
-			await interaction.reply(`Time Epoch: \`${epoch}\` \nTime Tag: <t:${epoch}> \nYear: ${year} Month: ${month} Day: ${day} Hour: ${hour} Minute: ${min} ${meridiem}`);
+		};
+
+		try {
+			await interaction.reply({ embeds:[tagOutput] });
 			await interaction.followUp(`\`<t:${epoch}>\``);
 		}
 		catch (error) {
@@ -86,6 +111,10 @@ module.exports = {
 		}
 	},
 };
+
+/* old response
+	await interaction.reply(`Time Epoch: \`${epoch}\` \nTime Tag: <t:${epoch}> \nYear: ${year} Month: ${month} Day: ${day} Hour: ${hour} Minute: ${min} ${meridiem}`);
+	*/
 
 /* Timezone Choices from time.is site
 
