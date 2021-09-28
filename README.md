@@ -9,3 +9,14 @@ Join my server - https://discord.gg/MPtE9zsBs5
 Bot Permissions -
 
 ![Bot Permissions](https://i.imgur.com/46RIFl2.png)
+
+## config.json
+
+{
+  "token": "insert bot token",
+  "clientId": "insert bot clientID",
+  "guildId": "insert one of your server's ID"
+}
+
+
+For more info click [here](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot) & [here](https://discordjs.guide/creating-your-bot/)
