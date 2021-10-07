@@ -2,7 +2,7 @@ const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS], partials: ['CHANNEL', 'REACTION'] });
 
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 
