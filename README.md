@@ -12,12 +12,13 @@ Bot Permissions -
 
 ## config.json
 
+```json
 {
   "token": "insert bot token",
   "clientId": "insert bot clientID",
   "guildId": "insert one of your server's ID"
 }
-
+```
 
 For more info click [here](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot) & [here](https://discordjs.guide/creating-your-bot/)
 

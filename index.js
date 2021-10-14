@@ -44,8 +44,6 @@ client.on('interactionCreate', async interaction => {
 		console.error(error);
 		return interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
-	// console.log('${interaction.user.tag} in #${interaction.channel.name} triggered an interaction.');
 });
-
 
 client.login(token);

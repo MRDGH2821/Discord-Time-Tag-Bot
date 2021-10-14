@@ -53,7 +53,7 @@ module.exports = {
 		)
 		.addIntegerOption(option =>
 			option.setName('minutes')
-				.setDescription('Enter Minutes')
+				.setDescription('Enter Minutes in MM format')
 				.setRequired(true),
 		)
 		.addStringOption(option =>
@@ -82,9 +82,9 @@ module.exports = {
 		const epoch = dayjs(daystr, 'YYYY M D HH m a Z').unix();
 
 		const tagOutput = {
-			color: 0x0099ff,
+			color: '0xf1efef',
 			title: 'Time Tag Generated!',
-			description: 'React with/Click on corresponding emoji to get the time tag in your desired format! ',
+			description: 'Click on corresponding button to get the time tag in your desired format! ',
 			fields: [
 				{
 					name: 'Input given',
@@ -125,7 +125,7 @@ module.exports = {
 			],
 			timestamp: new Date(),
 			footer: {
-				text: 'Just click on corresponding emoji to get time tag!',
+				text: 'Just click on corresponding button to get time tag!',
 			},
 		};
 
@@ -204,10 +204,10 @@ module.exports = {
 				}
 			},
 			);
-			collector.on('end', collected => {
 
+			collector.on('end', collected => {
 				const timeOut = {
-					color: 0x0099ff,
+					color: '0xf1efef',
 					title: 'Time out!',
 					description: 'Rerun the command again to select different format if you wish!',
 					footer: {
@@ -217,7 +217,6 @@ module.exports = {
 				console.log(`Collected ${collected.size} interactions.`);
 				return interaction.followUp({ embeds:[timeOut], ephemeral:true });
 			});
-			console.log(interaction);
 		}
 		catch (error) {
 			console.error(error);
@@ -225,58 +224,3 @@ module.exports = {
 		}
 	},
 };
-
-
-/*
-await interaction.reply(`Time String: ${daystr} \nTime Epoch: \`${epoch}\` \n<t:${epoch}> \n Year: ${year} Month: ${month} Day: ${day} Hour: ${hour} Minute: ${min} ${meridiem} UTC: ${utcOff}`);
-await interaction.followUp(`\`<t:${epoch}>\``);
-*/
-
-/* Reaction based response
-const msg = await interaction.reply({ embeds:[tagOutput], fetchReply: true });
-msg.react('<a:1_excited:892092443942600776>');
-await msg.react('<a:2_excited:892092443955175427>');
-await msg.react('<a:3_excited:892092444429135972>');
-await msg.react('<a:4_excited:892092444320075926> ');
-await msg.react('<a:5_excited:892092444282351656>');
-await msg.react('<a:6_excited:892092444437544960>');
-await msg.react('<a:7_excited:892092444760477726>');
-await msg.react('<a:8_excited:892092445322518588> ');
-
-const filter = (reaction, user) => {
-	return ['<a:1_excited:892092443942600776>', '<a:2_excited:892092443955175427> ', '<a:3_excited:892092444429135972> ', '<a:4_excited:892092444320075926> ', '<a:5_excited:892092444282351656> ', '<a:6_excited:892092444437544960> ', '<a:7_excited:892092444760477726> ', '<a:8_excited:892092445322518588>'].includes(reaction.emoji.name) && user.id === interaction.user.id;
-};
-
-msg.awaitReactions({ filter, max: 1, time: 60000, errors: ['time'] })
-	.then(collected => {
-		const reaction = collected.first();
-
-		if (reaction.emoji.name === '<a:1_excited:892092443942600776>') {
-			msg.reply(`<t:${epoch}:t>`);
-		}
-		else if (reaction.emoji.name === '<a:2_excited:892092443955175427>') {
-			msg.reply(`<t:${epoch}:T>`);
-		}
-		else if (reaction.emoji.name === '<a:3_excited:892092444429135972>') {
-			msg.reply(`<t:${epoch}:d>`);
-		}
-		else if (reaction.emoji.name === '<a:4_excited:892092444320075926>') {
-			msg.reply(`<t:${epoch}:D>`);
-		}
-		else if (reaction.emoji.name === '<a:5_excited:892092444282351656>') {
-			msg.reply(`<t:${epoch}:f>`);
-		}
-		else if (reaction.emoji.name === '<a:6_excited:892092444437544960>') {
-			msg.reply(`<t:${epoch}:F>`);
-		}
-		else if (reaction.emoji.name === '<a:7_excited:892092444760477726>') {
-			msg.reply(`<t:${epoch}:R>`);
-		}
-		else if (reaction.emoji.name === '<a:8_excited:892092445322518588>') {
-			msg.reply(`<t:${epoch}>`);
-		}
-	})
-	.catch(collected => {
-		interaction.followUp('Did not select option? Run the command again!');
-	});
-	*/

@@ -3,10 +3,10 @@ const { MessageEmbed } = require('discord.js');
 const { MessageActionRow, MessageButton } = require('discord.js');
 
 const helpEmbed = new MessageEmbed()
-	.setColor('#0099ff')
+	.setColor('#F1EFEF')
 	.setTitle('Help Section')
 	.setURL('https://discord.gg/MPtE9zsBs5')
-	.setDescription('The help section you get you started!\nThe bot takes in various inputs & generates epoch & time tag for you.')
+	.setDescription('The help section you get you started!\nThe bot takes in various inputs & generates epoch & time tag for you. The commands are self explanatory and here is a brief overview of the parameters.')
 	.addFields(
 		{ name: 'Year', value: 'Year input should be in `YYYY` format. For example `2021`. Other formats may confuse the bot & result in unexpected output.' },
 		{ name: 'Month', value: 'Month input should be in `MM` or `m` format. For example `9` or `09`. It supports integer format only & might throw error when wrong format used.' },
