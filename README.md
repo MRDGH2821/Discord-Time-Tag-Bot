@@ -1,16 +1,22 @@
 # Discord Time Tag Bot
 Generating Discord Time Tags made easy!
 
-Currently the Bot is in development.
-You may invite the bot via this [link](https://discord.com/api/oauth2/authorize?client_id=890243200579694672&permissions=415001529408&scope=bot%20applications.commands)
+~~Currently the Bot is in development.~~ Bot development is supposedly finished. And can be used publicly!
+
+Hosted on my personal Raspberry Pi 2B+. 
+
+You may invite the bot via this [link](https://discord.com/api/oauth2/authorize?client_id=890243200579694672&permissions=274878188544&scope=bot%20applications.commands)
 
 Join my server - https://discord.gg/MPtE9zsBs5
 
 Bot Permissions -
 
-![Bot Permissions](https://i.imgur.com/46RIFl2.png)
+![Bot permissions for Time Tag Bot](https://i.imgur.com/V3UVDuT.png)
 
-## config.json
+## Hosting
+
+1. Clone this repo.
+2. Create a file named `config.json` & put the given text -
 
 ```json
 {
@@ -20,9 +26,12 @@ Bot Permissions -
 }
 ```
 
+3. Install dependencies by using `npm install`.
+4. Use `npm start` to run the bot code.
+
 For more info click [here](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot) & [here](https://discordjs.guide/creating-your-bot/)
 
-## Licence
+## License
 
 [MIT](./LICENSE)
 
