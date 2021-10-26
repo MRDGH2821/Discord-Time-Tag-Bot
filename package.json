@@ -1,6 +1,6 @@
 {
   "name": "discord-time-tag-bot",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Generating Discord Time Tags made easy!",
   "main": "index.js",
   "scripts": {
@@ -20,13 +20,13 @@
   },
   "homepage": "https://github.com/MRDGH2821/Discord-Time-Tag-Bot#readme",
   "dependencies": {
-    "@discordjs/builders": "^0.6.0",
+    "@discordjs/builders": "^0.7.0",
     "@discordjs/rest": "^0.1.0-canary.0",
     "dayjs": "^1.10.7",
-    "discord-api-types": "^0.23.1",
-    "discord.js": "^13.1.0"
+    "discord-api-types": "^0.24.0",
+    "discord.js": "^13.2.0"
   },
   "devDependencies": {
-    "eslint": "^7.32.0"
+    "eslint": "^8.1.0"
   }
 }
