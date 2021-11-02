@@ -4,6 +4,16 @@ const customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
 const { MessageActionRow, MessageButton } = require("discord.js");
 
+function timeZoneParse(zone) {
+  if (/\d{4}/.test(zone)) {
+    console.log(`newZone = ${zone}`);
+    return zone;
+  } else if (/d{3}/.test(zone)) {
+    console.log(`newZone = ${zone}`);
+    return `0${zone}`;
+  }
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("time_tag_advanced")
@@ -85,8 +95,25 @@ module.exports = {
     const hour = interaction.options.getInteger("hours");
     const min = interaction.options.getInteger("minutes");
     const meridiem = interaction.options.getString("meridiem");
-    const utcOff = interaction.options.getString("utc");
+    let utcOff = interaction.options.getString("utc");
 
+    let utcProcess;
+    if (/^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g.test(utcOff)) {
+      console.log("True");
+    }
+    ///\d{2}:\d{2}/g.test(utcOff)
+    else if (true) {
+    }
+    /*
+    else if (/(\+|-)/g.test(utcOff.charAt(0))) {
+      utcProcess = utcOff.substring(1);
+      console.log(utcProcess);
+      if (/\d{3}/.test(utcProcess)) {
+        utcProcess = `0${utcProcess}`;
+      }
+      utcOff = `${utcOff.charAt(0)}${utcProcess}`;
+    }
+*/
     const daystr =
       year +
       " " +
@@ -102,7 +129,7 @@ module.exports = {
       " " +
       utcOff;
     const epoch = dayjs(daystr, "YYYY M D HH m a Z").unix();
-    const utcRegex = "/(+|-)d{2}:d{2}/gm";
+
     const tagOutput = {
       color: "0xf1efef",
       title: "Time Tag Generated!",
@@ -146,7 +173,6 @@ module.exports = {
           value: `\`<t:${epoch}>\` <t:${epoch}>`
         }
       ],
-      timestamp: new Date(),
       footer: {
         text: "Just click on corresponding button to get time tag!"
       }
@@ -234,18 +260,10 @@ module.exports = {
       });
 
       collector.on("end", collected => {
-        const timeOut = {
-          color: "0xf1efef",
-          title: "Time out!",
-          description:
-            "Rerun the command again to select different format if you wish!",
-          footer: {
-            text:
-              "Its because there is 3 second interaction limit imposed by Discord API. Can not help that."
-          }
-        };
         console.log(`Collected ${collected.size} interactions.`);
-        return interaction.followUp({ embeds: [timeOut], ephemeral: true });
+        //return interaction.followUp({ embeds: [timeOut], ephemeral: true });
+        tagOutput.footer.text = "Time out! Re-run the command again.";
+        return interaction.editReply({ embeds: [tagOutput], components: [] });
       });
     } catch (error) {
       console.error(error);
