@@ -102,7 +102,10 @@ module.exports = {
       console.log("True");
     }
     ///\d{2}:\d{2}/g.test(utcOff)
-    else if (true) {
+    else {
+      if (!/^(\+|-)/gm.test(utcOff)) {
+        utcOff = `+${utcOff}`;
+      }
     }
     /*
     else if (/(\+|-)/g.test(utcOff.charAt(0))) {
