@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "prestart": "node deploy-commands.js",
-    "start": "nodemon index.js",
+    "start": "node index.js",
+    "predev": "node deploy-commands.js",
+    "dev": "nodemon .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
