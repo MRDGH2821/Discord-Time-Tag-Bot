@@ -24,8 +24,8 @@ const helpEmbed = new MessageEmbed()
       value:
         "Day input should be in `DD` or `d` format. For example `1` or `28`."
     },
-    { name: "Hours", value: "Same input rules as month" },
-    { name: "Minutes", value: "Same input rules as month" },
+    { name: "Hours", value: "Should be in 12-Hour format." },
+    { name: "Minutes", value: "Should be in (0-59)" },
     {
       name: "Meridien",
       value: "Ante meridien or Post Meridien (`AM` or `PM`)"
