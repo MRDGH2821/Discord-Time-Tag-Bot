@@ -4,16 +4,6 @@ const customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
 const { MessageActionRow, MessageButton } = require("discord.js");
 
-function timeZoneParse(zone) {
-  if (/\d{4}/.test(zone)) {
-    console.log(`newZone = ${zone}`);
-    return zone;
-  } else if (/d{3}/.test(zone)) {
-    console.log(`newZone = ${zone}`);
-    return `0${zone}`;
-  }
-}
-
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("time_tag_advanced")
@@ -98,15 +88,42 @@ module.exports = {
     let utcOff = interaction.options.getString("utc");
 
     let utcProcess;
+    //TimeZone Validator using Regex
     if (/^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g.test(utcOff)) {
-      console.log("True");
-    }
-    ///\d{2}:\d{2}/g.test(utcOff)
-    else {
+      console.log("Timezone is valid.");
+    } else {
+      let sign;
       if (!/^(\+|-)/gm.test(utcOff)) {
+        //if no sign provided, add positive sign by default.
         utcOff = `+${utcOff}`;
       }
+      sign = utcOff.charAt(0);
+      utcProcess = utcOff.slice(1); //extract rest of the string for validation
+      if (/:/gm.test(utcProcess)) {
+        //removes colon from timezone
+        utcProcess = utcProcess.split(":").join();
+      }
+      if (/^[0-1]{1}[0-2]{1}[0-6]{1}$/gm.test(utcProcess)) {
+        ///three digit processing
+        utcProcess = `${utcProcess.slice(0, 2)}:${utcProcess.charAt(2)}0`;
+      } else if (/^\d{2}$/gm.test(utcProcess)) {
+        //two digit rocessing
+        if (/^[0-1][0-2]$/gm.text(utcProcess)) {
+          //if the two digits are 10,11,12; just append :00
+          utcProcess = `${utcProcess}:00`;
+        } else {
+          //for other cases, split in middle & proceed
+          utcProcess = `0${utcProcess[0]}:${utcProcess[1]}0`;
+        }
+      } else if (/^\d$/gm.test(utcProcess)) {
+        //single digit processing
+        utcProcess = `0${utcProcess}:00`;
+      }
+
+      //Finally assign processed string, free of mistakes.
+      utcOff = `${sign}${utcProcess}`;
     }
+
     /*
     else if (/(\+|-)/g.test(utcOff.charAt(0))) {
       utcProcess = utcOff.substring(1);
@@ -233,45 +250,52 @@ module.exports = {
       );
 
     try {
-      const msg = await interaction.reply({
-        embeds: [tagOutput],
-        fetchReply: true,
-        components: [row1, row2]
-      });
-      const collector = msg.createMessageComponentCollector({
-        componentType: "BUTTON",
-        time: 15000
-      });
-      collector.on("collect", i => {
-        if (i.customId === "formatone") {
-          i.reply(`\`<t:${epoch}:t>\``);
-        } else if (i.customId === "formattwo") {
-          i.reply(`\`<t:${epoch}:T>\``);
-        } else if (i.customId === "formatthree") {
-          i.reply(`\`<t:${epoch}:d>\``);
-        } else if (i.customId === "formatfour") {
-          i.reply(`\`<t:${epoch}:D>\``);
-        } else if (i.customId === "formatfive") {
-          i.reply(`\`<t:${epoch}:f>\``);
-        } else if (i.customId === "formatsix") {
-          i.reply(`\`<t:${epoch}:F>\``);
-        } else if (i.customId === "formatseven") {
-          i.reply(`\`<t:${epoch}:R>\``);
-        } else if (i.customId === "formateight") {
-          i.reply(`\`<t:${epoch}>\``);
-        }
-      });
+      if (/^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g.test(utcOff)) {
+        const msg = await interaction.reply({
+          embeds: [tagOutput],
+          fetchReply: true,
+          components: [row1, row2]
+        });
+        const collector = msg.createMessageComponentCollector({
+          componentType: "BUTTON",
+          time: 15000
+        });
+        collector.on("collect", i => {
+          if (i.customId === "formatone") {
+            i.reply(`\`<t:${epoch}:t>\``);
+          } else if (i.customId === "formattwo") {
+            i.reply(`\`<t:${epoch}:T>\``);
+          } else if (i.customId === "formatthree") {
+            i.reply(`\`<t:${epoch}:d>\``);
+          } else if (i.customId === "formatfour") {
+            i.reply(`\`<t:${epoch}:D>\``);
+          } else if (i.customId === "formatfive") {
+            i.reply(`\`<t:${epoch}:f>\``);
+          } else if (i.customId === "formatsix") {
+            i.reply(`\`<t:${epoch}:F>\``);
+          } else if (i.customId === "formatseven") {
+            i.reply(`\`<t:${epoch}:R>\``);
+          } else if (i.customId === "formateight") {
+            i.reply(`\`<t:${epoch}>\``);
+          }
+        });
 
-      collector.on("end", collected => {
-        console.log(`Collected ${collected.size} interactions.`);
-        //return interaction.followUp({ embeds: [timeOut], ephemeral: true });
-        tagOutput.footer.text = "Time out! Re-run the command again.";
-        return interaction.editReply({ embeds: [tagOutput], components: [] });
-      });
+        collector.on("end", collected => {
+          console.log(`Collected ${collected.size} interactions.`);
+          //return interaction.followUp({ embeds: [timeOut], ephemeral: true });
+          tagOutput.footer.text = "Time out! Re-run the command again.";
+          return interaction.editReply({ embeds: [tagOutput], components: [] });
+        });
+      } else {
+        return await interaction.reply({
+          content: `Are you sure you have put proper timezone? \nI tried to process it, but its way out of bounds for me to handle it. \nAnd even if I did use it as it is, most likely you would end up with wrond output or with <t:NaN>...\n\nPlease try again by putting proper timezone with sign like this: \n\`+05:30\` \n\`-04:00\` \n\`+00:00\` \n\nYour Input after processing: ${utcOff}`,
+          fetchReply: true
+        });
+      }
     } catch (error) {
       console.error(error);
       return interaction.reply(
-        `Uhhh, sorry an error occured. Please use /help command & reach out bot developer with error screenshot.\nError dump: ${error}`
+        `Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \`${error}\``
       );
     }
   }
