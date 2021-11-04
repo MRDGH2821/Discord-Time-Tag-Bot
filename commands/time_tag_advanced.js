@@ -4,6 +4,20 @@ const customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
 const { MessageActionRow, MessageButton } = require("discord.js");
 
+function validateDateString(day, month, year) {
+  day = Number(day);
+  month = Number(month) - 1; //bloody 0-indexed month
+  year = Number(year);
+
+  let d = new Date(year, month, day);
+
+  let yearMatches = d.getUTCFullYear() === year;
+  let monthMatches = d.getUTCMonth() === month;
+  let dayMatches = d.getUTCDate() === day;
+
+  return yearMatches && monthMatches && dayMatches;
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("time_tag_advanced")
@@ -261,9 +275,7 @@ module.exports = {
     const utcBool = /^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g.test(
       utcOff
     );
-    const dateBool = /(?<=\D|^)(?<year>\d{4})(?<sep>[^\w\s])(?<month>1[0-2]|0[1-9])\k<sep>(?<day>0[1-9]|[12][0-9]|(?<=11\k<sep>|[^1][4-9]\k<sep>)30|(?<=1[02]\k<sep>|[^1][13578]\k<sep>)3[01])(?=\D|$)/gm.test(
-      date
-    );
+    const dateBool = validateDateString(day, month, year);
     const timeBool = /^((0?[1-9]{1})|(1{1}[0-2]{1}))((:[0-5][0-9])?)$/gm.test(
       time
     );
@@ -307,7 +319,7 @@ module.exports = {
         const errEmb = {
           color: "0xf1efef",
           title: "Invalid Input!",
-          description: `Please check the inputs you have provided!\n\nPossible reasons for incorrect inputs:\nTimezone was incorrect (even after processing) \nDate is invalid (Day \`${day}\` doesn't exist in Month \`${month}\`) \nTime is invalid (Incorrect minute \`${min}\`)`,
+          description: `Please check the inputs you have provided!\n\nPossible reasons for incorrect inputs:\nTimezone was incorrect (even after processing) \nDate is invalid (Day \`${day}\` doesn't exist in Month \`${month}\` in the Year \`${year}\`) \nTime is invalid (Incorrect minute \`${min}\`)`,
           fields: [
             {
               name: `Correct Timezone examples`,
@@ -319,27 +331,23 @@ module.exports = {
             },
             {
               name: `Your Timezone Input *before* processing`,
-              value: `${oldUtc}`
+              value: `\`${oldUtc}\``
             },
             {
               name: `Your Timezone Input *after* processing`,
-              value: `${utcOff}`
+              value: `\`${utcOff}\``
             },
             {
               name: `Your Date input (YYYY-MM-DD)`,
-              value: `${date}`
+              value: `\`${date}\``
             },
             {
               name: `Your Time input (HH:MM)`,
-              value: `${time}`
+              value: `\`${time}\``
             },
             {
               name: `Regex used for evaluating TimeZone`,
               value: `\`/^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g\``
-            },
-            {
-              name: `Regex used for evaluating Date`,
-              value: `\`/(?<=\D|^)(?<year>\d{4})(?<sep>[^\w\s])(?<month>1[0-2]|0[1-9])\k<sep>(?<day>0[1-9]|[12][0-9]|(?<=11\k<sep>|[^1][4-9]\k<sep>)30|(?<=1[02]\k<sep>|[^1][13578]\k<sep>)3[01])(?=\D|$)/gm\`\n(Seperator is internally used to perform regex check.)`
             },
             {
               name: `Regex used for evaluating Time`,
