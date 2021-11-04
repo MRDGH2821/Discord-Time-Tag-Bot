@@ -34,7 +34,7 @@ const helpEmbed = new MessageEmbed()
     {
       name: "UTC",
       value:
-        "Takes value in UTC Offset. For example -> `+05:00` or `-06:30` or `+00:00`. It is syntax sensitive. That means, you have to explictly put sign (`+` or `-`) & the trailing zeros."
+        "Takes value in UTC Offset. \nCorrect Examples: \n`+05:00` \n`-06:30` \n`+00:00`.\n\nExamples which will be processed: \n`530` = `+05:30` \n`-4` = `-04:00` \n`0` = `+00:00`\n\nOther than that, time tag will not be generated."
     },
     {
       name: "Bot still not working?",
