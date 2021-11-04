@@ -307,7 +307,7 @@ module.exports = {
         const errEmb = {
           color: "0xf1efef",
           title: "Invalid Input!",
-          description: `Please check the inputs you have provided!\n\nPossible reasons for incorrect inputs:\nTimezone was incorrect (even after processing) \nDate is invalid (Day ${day} doesn't exist in Month ${month}) \nTime is invalid (Incorrect minute ${min})`,
+          description: `Please check the inputs you have provided!\n\nPossible reasons for incorrect inputs:\nTimezone was incorrect (even after processing) \nDate is invalid (Day \`${day}\` doesn't exist in Month \`${month}\`) \nTime is invalid (Incorrect minute \`${min}\`)`,
           fields: [
             {
               name: `Correct Timezone examples`,
