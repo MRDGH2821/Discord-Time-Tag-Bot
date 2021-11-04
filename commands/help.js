@@ -12,18 +12,17 @@ const helpEmbed = new MessageEmbed()
   .addFields(
     {
       name: "Year",
-      value:
-        "Year input should be in `YYYY` format. For example `2021`. Other formats may confuse the bot & result in unexpected output."
+      value: "Year input should be in `YYYY` format. For example `2021`."
     },
     {
       name: "Month",
       value:
-        "Month input should be in `MM` or `m` format. For example `9` or `09`. It supports integer format only & might throw error when wrong format used."
+        "Month input should be in `MM` or `m` format. For example `9` or `09`."
     },
     {
       name: "Day",
       value:
-        "Same input rules as Month. Do note that if the Day exceeds `30` or `31` for a particular month, it will not throw error. Instead time tag will be generated after computing excess days. For example Input is `2021 09 32` September has only **30 days** so the time tag will be generated for `2021 10 2` i.e. `October 2 2021`"
+        "Day input should be in `DD` or `d` format. For example `1` or `28`."
     },
     { name: "Hours", value: "Same input rules as month" },
     { name: "Minutes", value: "Same input rules as month" },
@@ -40,6 +39,10 @@ const helpEmbed = new MessageEmbed()
       name: "Bot still not working?",
       value:
         "Please join my [server](https://discord.gg/MPtE9zsBs5) & elaborate how you encountered that problem. Incase you are running out of time you may click [here](https://hammertime.djdavid98.art/). You may also submit an issue at [Github Repository](https://github.com/MRDGH2821/Discord-Time-Tag-Bot/issues) \n\n*Btw this site is not affliated with bot developer in any way, it was linked here to reduce your wasted time.*"
+    },
+    {
+      name: "Regex Credits",
+      value: "https://regex101.com/library/cE5uE3"
     }
   );
 
