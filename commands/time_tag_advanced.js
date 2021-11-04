@@ -123,7 +123,7 @@ module.exports = {
 
       if (/^\d{2}$/gm.test(utcProcess)) {
         //two digit rocessing
-        if (/^[1][0-2]$/gm.text(utcProcess)) {
+        if (/^[1][0-2]$/gm.test(utcProcess)) {
           //if the two digits are 10,11,12; just append :00
           utcProcess = `${utcProcess}:00`;
         } else {
@@ -156,8 +156,10 @@ module.exports = {
     }
 
     const daystr = `${year} ${month} ${day} ${hour} ${min} ${meridiem} ${utcOff}`;
+    console.log(daystr);
     const epoch = dayjs(daystr, "YYYY M D HH m a Z").unix();
-
+    const date = `${year}-${month}-${day}`;
+    const time = `${hour}:${min}`;
     const tagOutput = {
       color: "0xf1efef",
       title: "Time Tag Generated!",
@@ -166,7 +168,7 @@ module.exports = {
       fields: [
         {
           name: "Input given",
-          value: `Time Epoch: \`${epoch}\` \n${year}-${month}-${day} \nTime: ${hour}:${min} ${meridiem} \nUTC: ${utcOff}`
+          value: `Time Epoch: \`${epoch}\` \nDate: ${date} \nTime: ${time} ${meridiem} \nUTC: ${utcOff}`
         },
         {
           name: "Format 1",
@@ -256,9 +258,17 @@ module.exports = {
           .setLabel("Format 8")
           .setStyle("PRIMARY")
       );
-
+    const utcBool = /^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g.test(
+      utcOff
+    );
+    const dateBool = /(?<=\D|^)(?<year>\d{4})(?<sep>[^\w\s])(?<month>1[0-2]|0[1-9])\k<sep>(?<day>0[1-9]|[12][0-9]|(?<=11\k<sep>|[^1][4-9]\k<sep>)30|(?<=1[02]\k<sep>|[^1][13578]\k<sep>)3[01])(?=\D|$)/gm.test(
+      date
+    );
+    const timeBool = /^((0?[1-9]{1})|(1{1}[0-2]{1}))((:[0-5][0-9])?)$/gm.test(
+      time
+    );
     try {
-      if (/^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g.test(utcOff)) {
+      if (utcBool && dateBool && timeBool) {
         const msg = await interaction.reply({
           embeds: [tagOutput],
           fetchReply: true,
@@ -296,11 +306,11 @@ module.exports = {
       } else {
         const errEmb = {
           color: "0xf1efef",
-          title: "Invalid Timezone!",
-          description: `Are you sure you have put proper timezone? \nI tried to process it, but its way out of bounds for me to handle it. \nAnd even if I did use it as it is, most likely you would end up with wrong output or with \`<t:NaN>\`...`,
+          title: "Invalid Input!",
+          description: `Please check the inputs you have provided!\n\nPossible reasons for incorrect inputs:\nTimezone was incorrect (even after processing) \nDate is invalid (Day ${day} doesn't exist in Month ${month}) \nTime is invalid (Incorrect minute ${min})`,
           fields: [
             {
-              name: `Correct examples`,
+              name: `Correct Timezone examples`,
               value: `\`+05:30\` \n\`-04:00\` \n\`+00:00\``
             },
             {
@@ -308,19 +318,36 @@ module.exports = {
               value: `\`530\` = \`+05:30\` \n\`-4\` = \`-04:00\` \n\`0\` = \`+00:00\``
             },
             {
-              name: `Your Input *before* processing`,
+              name: `Your Timezone Input *before* processing`,
               value: `${oldUtc}`
             },
             {
-              name: `Your Input *after* processing`,
+              name: `Your Timezone Input *after* processing`,
               value: `${utcOff}`
             },
             {
+              name: `Your Date input (YYYY-MM-DD)`,
+              value: `${date}`
+            },
+            {
+              name: `Your Time input (HH:MM)`,
+              value: `${time}`
+            },
+            {
               name: `Regex used for evaluating TimeZone`,
-              value: `/^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g`
+              value: `\`/^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g\``
+            },
+            {
+              name: `Regex used for evaluating Date`,
+              value: `\`/(?<=\D|^)(?<year>\d{4})(?<sep>[^\w\s])(?<month>1[0-2]|0[1-9])\k<sep>(?<day>0[1-9]|[12][0-9]|(?<=11\k<sep>|[^1][4-9]\k<sep>)30|(?<=1[02]\k<sep>|[^1][13578]\k<sep>)3[01])(?=\D|$)/gm\`\n(Seperator is internally used to perform regex check.)`
+            },
+            {
+              name: `Regex used for evaluating Time`,
+              value: `\`/^((0?[1-9]{1})|(1{1}[0-2]{1}))((:[0-5][0-9])?)$/gm\``
             }
           ]
         };
+
         return await interaction.reply({
           embeds: [errEmb],
           fetchReply: true
