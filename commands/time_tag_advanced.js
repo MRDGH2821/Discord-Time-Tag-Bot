@@ -80,14 +80,15 @@ module.exports = {
     ),
   async execute(interaction) {
     const year = interaction.options.getInteger("year");
-    const month = interaction.options.getInteger("month");
-    const day = interaction.options.getInteger("day");
-    const hour = interaction.options.getInteger("hours");
-    const min = interaction.options.getInteger("minutes");
+    let month = interaction.options.getInteger("month");
+    let day = interaction.options.getInteger("day");
+    let hour = interaction.options.getInteger("hours");
+    let min = interaction.options.getInteger("minutes");
     const meridiem = interaction.options.getString("meridiem");
     let utcOff = interaction.options.getString("utc");
-
+    const oldUtc = utcOff;
     let utcProcess;
+
     //TimeZone Validator using Regex
     if (/^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g.test(utcOff)) {
       console.log("Timezone is valid.");
@@ -97,25 +98,41 @@ module.exports = {
         //if no sign provided, add positive sign by default.
         utcOff = `+${utcOff}`;
       }
+      //Extract Sign
       sign = utcOff.charAt(0);
-      utcProcess = utcOff.slice(1); //extract rest of the string for validation
+
+      //Extract rest of the string for validation
+      utcProcess = utcOff.slice(1);
+      console.log(utcProcess);
+
       if (/:/gm.test(utcProcess)) {
         //removes colon from timezone
         utcProcess = utcProcess.split(":").join();
       }
-      if (/^[0-1]{1}[0-2]{1}[0-6]{1}$/gm.test(utcProcess)) {
+
+      if (/^\d{3}$/gm.test(utcProcess)) {
         ///three digit processing
-        utcProcess = `${utcProcess.slice(0, 2)}:${utcProcess.charAt(2)}0`;
-      } else if (/^\d{2}$/gm.test(utcProcess)) {
+        if (/^[0-1]{1}[0-2]{1}[0-6]{1}$/gm.test(utcProcess)) {
+          //if the number lies in between 000-126
+          utcProcess = `${utcProcess.slice(0, 2)}:${utcProcess.charAt(2)}0`;
+        } else {
+          //in other cases, first digit will be extracted & rest 2 ill be put in end
+          utcProcess = `0${utcProcess.charAt(0)}:${utcProcess.slice(1)}`;
+        }
+      }
+
+      if (/^\d{2}$/gm.test(utcProcess)) {
         //two digit rocessing
-        if (/^[0-1][0-2]$/gm.text(utcProcess)) {
+        if (/^[1][0-2]$/gm.text(utcProcess)) {
           //if the two digits are 10,11,12; just append :00
           utcProcess = `${utcProcess}:00`;
         } else {
           //for other cases, split in middle & proceed
           utcProcess = `0${utcProcess[0]}:${utcProcess[1]}0`;
         }
-      } else if (/^\d$/gm.test(utcProcess)) {
+      }
+
+      if (/^\d{1}$/gm.test(utcProcess)) {
         //single digit processing
         utcProcess = `0${utcProcess}:00`;
       }
@@ -124,30 +141,21 @@ module.exports = {
       utcOff = `${sign}${utcProcess}`;
     }
 
-    /*
-    else if (/(\+|-)/g.test(utcOff.charAt(0))) {
-      utcProcess = utcOff.substring(1);
-      console.log(utcProcess);
-      if (/\d{3}/.test(utcProcess)) {
-        utcProcess = `0${utcProcess}`;
-      }
-      utcOff = `${utcOff.charAt(0)}${utcProcess}`;
+    //Regex checker for other variables
+    if (/^\d{1}$/gm.test(month)) {
+      month = `0${month}`;
     }
-*/
-    const daystr =
-      year +
-      " " +
-      month +
-      " " +
-      day +
-      " " +
-      hour +
-      " " +
-      min +
-      " " +
-      meridiem +
-      " " +
-      utcOff;
+    if (/^\d{1}$/gm.test(day)) {
+      day = `0${day}`;
+    }
+    if (/^\d{1}$/gm.test(hour)) {
+      hour = `0${hour}`;
+    }
+    if (/^\d{1}$/gm.test(min)) {
+      min = `0${min}`;
+    }
+
+    const daystr = `${year} ${month} ${day} ${hour} ${min} ${meridiem} ${utcOff}`;
     const epoch = dayjs(daystr, "YYYY M D HH m a Z").unix();
 
     const tagOutput = {
@@ -282,13 +290,39 @@ module.exports = {
 
         collector.on("end", collected => {
           console.log(`Collected ${collected.size} interactions.`);
-          //return interaction.followUp({ embeds: [timeOut], ephemeral: true });
           tagOutput.footer.text = "Time out! Re-run the command again.";
           return interaction.editReply({ embeds: [tagOutput], components: [] });
         });
       } else {
+        const errEmb = {
+          color: "0xf1efef",
+          title: "Invalid Timezone!",
+          description: `Are you sure you have put proper timezone? \nI tried to process it, but its way out of bounds for me to handle it. \nAnd even if I did use it as it is, most likely you would end up with wrong output or with \`<t:NaN>\`...`,
+          fields: [
+            {
+              name: `Correct examples`,
+              value: `\`+05:30\` \n\`-04:00\` \n\`+00:00\``
+            },
+            {
+              name: `Examples which will be processed`,
+              value: `\`530\` = \`+05:30\` \n\`-4\` = \`-04:00\` \n\`0\` = \`+00:00\``
+            },
+            {
+              name: `Your Input *before* processing`,
+              value: `${oldUtc}`
+            },
+            {
+              name: `Your Input *after* processing`,
+              value: `${utcOff}`
+            },
+            {
+              name: `Regex used for evaluating TimeZone`,
+              value: `/^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g`
+            }
+          ]
+        };
         return await interaction.reply({
-          content: `Are you sure you have put proper timezone? \nI tried to process it, but its way out of bounds for me to handle it. \nAnd even if I did use it as it is, most likely you would end up with wrond output or with <t:NaN>...\n\nPlease try again by putting proper timezone with sign like this: \n\`+05:30\` \n\`-04:00\` \n\`+00:00\` \n\nYour Input after processing: ${utcOff}`,
+          embeds: [errEmb],
           fetchReply: true
         });
       }
