@@ -4,18 +4,22 @@ const customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
 const { MessageActionRow, MessageButton } = require("discord.js");
 
-function validateDateString(day, month, year) {
+function validateDateString(day, month, year, hour, minute) {
   day = Number(day);
   month = Number(month) - 1; //bloody 0-indexed month
   year = Number(year);
+  hour = Number(hour);
+  minute = Number(minute);
 
-  let d = new Date(year, month, day);
+  let d = new Date(year, month, day, hour, minute, 0, 0);
 
   let yearMatches = d.getUTCFullYear() === year;
   let monthMatches = d.getUTCMonth() === month;
   let dayMatches = d.getUTCDate() === day;
+  let hourMatches = d.getUTCHours() === hour;
+  let minMatches = d.getUTCMinutes() === minute;
 
-  return yearMatches && monthMatches && dayMatches;
+  return yearMatches && monthMatches && dayMatches && hourMatches && minMatches;
 }
 
 module.exports = {
@@ -154,7 +158,7 @@ module.exports = {
       //Finally assign processed string, free of mistakes.
       utcOff = `${sign}${utcProcess}`;
     }
-
+    const dateBool = validateDateString(day, month, year, hour, min);
     //Regex checker for other variables
     if (/^\d{1}$/gm.test(month)) {
       month = `0${month}`;
@@ -275,12 +279,9 @@ module.exports = {
     const utcBool = /^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g.test(
       utcOff
     );
-    const dateBool = validateDateString(day, month, year);
-    const timeBool = /^((0?[1-9]{1})|(1{1}[0-2]{1}))((:[0-5][0-9])?)$/gm.test(
-      time
-    );
+
     try {
-      if (utcBool && dateBool && timeBool) {
+      if (utcBool && dateBool) {
         const msg = await interaction.reply({
           embeds: [tagOutput],
           fetchReply: true,
