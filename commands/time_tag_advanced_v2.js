@@ -8,6 +8,7 @@ const utc = require('dayjs/plugin/utc');
 dayjs.extend(utc);
 const { MessageActionRow, MessageButton } = require('discord.js');
 
+/*
 function dateValidation(year, month, day) {
 	year = Number(year);
 	month = Number(month) ;
@@ -32,7 +33,7 @@ function dateValidation(year, month, day) {
 	};
 	return result ;
 }
-
+*/
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('time_tag_advanced_v2')
@@ -110,9 +111,9 @@ module.exports = {
 	async execute(interaction) {
 		const year = interaction.options.getInteger('year');
 		let month = interaction.options.getInteger('month');
-		let day = interaction.options.getInteger('day');
+		let date = interaction.options.getInteger('day');
 		let hour = interaction.options.getInteger('hours');
-		let min = interaction.options.getInteger('minutes');
+		let minute = interaction.options.getInteger('minutes');
 		const meridiem = interaction.options.getString('meridiem');
 		let utcOff = interaction.options.getString('utc');
 		const oldUtc = utcOff;
@@ -171,24 +172,27 @@ module.exports = {
 			// Finally assign processed string, free of mistakes.
 			utcOff = `${sign}${utcProcess}`;
 		}
+
 		// Regex checker for other variables
 		if (/^\d{1}$/gm.test(month)) {
 			month = `0${month}`;
 		}
-		if (/^\d{1}$/gm.test(day)) {
-			day = `0${day}`;
+		if (/^\d{1}$/gm.test(date)) {
+			date = `0${date}`;
 		}
 		if (/^\d{1}$/gm.test(hour)) {
 			hour = `0${hour}`;
 		}
-		if (/^\d{1}$/gm.test(min)) {
-			min = `0${min}`;
+		if (/^\d{1}$/gm.test(minute)) {
+			minute = `0${minute}`;
 		}
-		const date = `${year}-${month}-${day}`;
-		const time = `${hour}:${min}`;
-		const daystr = dayjs(`${date} ${time} ${meridiem} ${utcOff}`, 'YYYY-MM-DD hh:mm a Z').utc();
+
+		const daystr = dayjs(`${year}-${month}-${date} ${hour}:${minute} ${meridiem} ${utcOff}`, 'YYYY-MM-DD hh:mm a Z').utc();
+		// const date = `${year}-${month}-${day}`;
+		//	const time = `${hour}:${min}`;
+		//	daystr(`${meridiem} ${utcOff}`, 'a Z');
 		// `${year} ${month} ${day} ${hour} ${min} ${meridiem} ${utcOff}`;
-		const valid = dateValidation(year, month, day);
+		//		const valid = dateValidation(year, month, day);
 		/*
 		console.log(daystr);
 		console.log(daystr.$M);
@@ -206,7 +210,7 @@ module.exports = {
 			fields: [
 				{
 					name: 'Input given',
-					value: `Time Epoch: \`${epoch}\` \nDate: ${date} \nTime: ${time} ${meridiem} \nUTC: ${utcOff}`,
+					value: `Time Epoch: \`${epoch}\` \nDate: ${daystr.format('YYYY-MM-DD')} \nTime: ${daystr.format('hh:mm a')} \nUTC: ${daystr.format('Z')}`,
 				},
 				{
 					name: 'Format 1',
@@ -352,7 +356,7 @@ module.exports = {
 					fields: [
 						{
 							name: 'Inputs *before* processing',
-							value: `Date: \`${date}\` \nTime: \`${time} ${meridiem}\` \nTimezone: \`${oldUtc}\``,
+							value: `Date: \`${date}\` \nTime: \`${hour}:${minute} ${meridiem}\` \nTimezone: \`${oldUtc}\``,
 						},
 						{
 							name: 'Inputs *after* processing',
@@ -365,10 +369,6 @@ module.exports = {
 						{
 							name: 'Library & UTC mode',
 							value: `Dayjs Library. UTC Mode: \`${daystr.$u}\``,
-						},
-						{
-							name: 'Debug Info',
-							value: `Year Match: ${valid.yearbool} \nMonth Match: ${valid.monthbool} \nDay Match: ${valid.daybool} \nOverall Match: ${valid.overallbool} \n${valid.Input} \n${valid.Library}`,
 						},
 					],
 				};
