@@ -36,6 +36,10 @@ const helpEmbed = new MessageEmbed()
         'Takes value in UTC Offset. \nCorrect Examples: \n`+05:00` \n`-06:30` \n`+00:00`.\n\nExamples which will be processed: \n`530` = `+05:30` \n`-4` = `-04:00` \n`0` = `+00:00`\n\nOther than that, time tag will not be generated.',
 		},
 		{
+			name: 'Additional Notes',
+			value:'Sometimes it may happen that the inputs do not match with the processed output or library output. One common cause can be that, the input value for particular parameter exceeds the range. So in that case, it will jump to next cycle. For example putting Day as `32` will result in increment of month by 1 & excess day will be substracted. In those cases, please take a screenshot & send it to support server.',
+		},
+		{
 			name: 'Bot still not working?',
 			value:
         'Please join my [server](https://discord.gg/MPtE9zsBs5) & elaborate how you encountered that problem. Incase you are running out of time you may click [here](https://hammertime.djdavid98.art/). You may also submit an issue at [Github Repository](https://github.com/MRDGH2821/Discord-Time-Tag-Bot/issues) \n\n*Btw this site is not affliated with bot developer in any way, it was linked here to reduce your wasted time.*',
