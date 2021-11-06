@@ -8,32 +8,6 @@ const utc = require('dayjs/plugin/utc');
 dayjs.extend(utc);
 const { MessageActionRow, MessageButton } = require('discord.js');
 
-/*
-function dateValidation(year, month, day) {
-	year = Number(year);
-	month = Number(month) ;
-	day = Number(day);
-	const dayj = dayjs();
-	dayj.year(year);
-	dayj.month(month);
-	dayj.date(day);
-	console.log(`Input:\nYear: ${year}. Month: ${month}. Day: ${day}`);
-	const yearBool = dayj.utc().year() === year;
-	const monthBool = dayj.utc().month() === month;
-	const dayBool = dayj.utc().date() === day;
-	console.log(`Lib: \nYear: ${dayj.year()}. Month: ${dayj.month()}. Day: ${dayj.day()}`);
-	console.log(`Boolean: \nYear: ${yearBool}. Month: ${monthBool}. Day: ${dayBool}`);
-	const result = {
-		yearbool: yearBool,
-		monthbool: monthBool,
-		daybool : dayBool,
-		overallbool: yearBool && monthBool && dayBool,
-		Input: `Input:\nYear: ${year}. Month: ${month}. Day: ${day}`,
-		Library: `Lib: \nYear: ${dayj.year()}. Month: ${dayj.month()}. Day: ${dayj.day()}`,
-	};
-	return result ;
-}
-*/
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('time_tag_advanced_v2')
@@ -188,18 +162,9 @@ module.exports = {
 		}
 
 		const daystr = dayjs(`${year}-${month}-${date} ${hour}:${minute} ${meridiem} ${utcOff}`, 'YYYY-MM-DD hh:mm a Z').utc();
-		// const date = `${year}-${month}-${day}`;
-		//	const time = `${hour}:${min}`;
-		//	daystr(`${meridiem} ${utcOff}`, 'a Z');
-		// `${year} ${month} ${day} ${hour} ${min} ${meridiem} ${utcOff}`;
-		//		const valid = dateValidation(year, month, day);
-		/*
-		console.log(daystr);
-		console.log(daystr.$M);
-		console.log(daystr.hour());
-		console.log(daystr.local().hour());
-		console.log(daystr.utc().hour());
-*/
+		const datey = `${year}-${month}-${date}`;
+		const time = `${hour}:${minute}`;
+
 		const epoch = daystr.unix();
 
 		const tagOutput = {
@@ -210,7 +175,7 @@ module.exports = {
 			fields: [
 				{
 					name: 'Input given',
-					value: `Time Epoch: \`${epoch}\` \nDate: ${daystr.format('YYYY-MM-DD')} \nTime: ${daystr.format('hh:mm a')} \nUTC: ${daystr.format('Z')}`,
+					value: `Time Epoch: \`${epoch}\` \nDate: ${datey} \nTime: ${time} \nUTC: ${utcOff}`,
 				},
 				{
 					name: 'Format 1',
@@ -356,7 +321,7 @@ module.exports = {
 					fields: [
 						{
 							name: 'Inputs *before* processing',
-							value: `Date: \`${date}\` \nTime: \`${hour}:${minute} ${meridiem}\` \nTimezone: \`${oldUtc}\``,
+							value: `Date: \`${year}-${month}-${date}\` \nTime: \`${hour}:${minute} ${meridiem}\` \nTimezone: \`${oldUtc}\``,
 						},
 						{
 							name: 'Inputs *after* processing',
