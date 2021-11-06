@@ -2,28 +2,9 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(customParseFormat);
-const arraySupport = require('dayjs/plugin/arraySupport');
-dayjs.extend(arraySupport);
+const utc = require('dayjs/plugin/utc');
+dayjs.extend(utc);
 const { MessageActionRow, MessageButton } = require('discord.js');
-
-function validateDateString(day, month, year, hour, minute) {
-	day = Number(day);
-	// bloody 0-indexed month
-	month = Number(month) - 1;
-	year = Number(year);
-	hour = Number(hour);
-	minute = Number(minute);
-
-	const d = dayjs(year, month, day, hour, minute, 0, 0);
-
-	const yearMatches = d.year() === year;
-	const monthMatches = d.month() === month;
-	const dayMatches = d.date() === day;
-	const hourMatches = d.hour() === hour;
-	const minMatches = d.minute() === minute;
-
-	return yearMatches && monthMatches && dayMatches && hourMatches && minMatches;
-}
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -102,9 +83,9 @@ module.exports = {
 	async execute(interaction) {
 		const year = interaction.options.getInteger('year');
 		let month = interaction.options.getInteger('month');
-		let day = interaction.options.getInteger('day');
+		let date = interaction.options.getInteger('day');
 		let hour = interaction.options.getInteger('hours');
-		let min = interaction.options.getInteger('minutes');
+		let minute = interaction.options.getInteger('minutes');
 		const meridiem = interaction.options.getString('meridiem');
 		let utcOff = interaction.options.getString('utc');
 		const oldUtc = utcOff;
@@ -163,26 +144,27 @@ module.exports = {
 			// Finally assign processed string, free of mistakes.
 			utcOff = `${sign}${utcProcess}`;
 		}
-		const dateBool = validateDateString(day, month, year, hour, min);
+
 		// Regex checker for other variables
 		if (/^\d{1}$/gm.test(month)) {
 			month = `0${month}`;
 		}
-		if (/^\d{1}$/gm.test(day)) {
-			day = `0${day}`;
+		if (/^\d{1}$/gm.test(date)) {
+			date = `0${date}`;
 		}
 		if (/^\d{1}$/gm.test(hour)) {
 			hour = `0${hour}`;
 		}
-		if (/^\d{1}$/gm.test(min)) {
-			min = `0${min}`;
+		if (/^\d{1}$/gm.test(minute)) {
+			minute = `0${minute}`;
 		}
 
-		const daystr = `${year} ${month} ${day} ${hour} ${min} ${meridiem} ${utcOff}`;
-		console.log(daystr);
-		const epoch = dayjs(daystr, 'YYYY M D HH m a Z').unix();
-		const date = `${year}-${month}-${day}`;
-		const time = `${hour}:${min}`;
+		const daystr = dayjs(`${year}-${month}-${date} ${hour}:${minute} ${meridiem} ${utcOff}`, 'YYYY-MM-DD hh:mm a Z').utc();
+		const datey = `${year}-${month}-${date}`;
+		const time = `${hour}:${minute}`;
+
+		const epoch = daystr.unix();
+
 		const tagOutput = {
 			color: '0xf1efef',
 			title: 'Time Tag Generated!',
@@ -191,7 +173,7 @@ module.exports = {
 			fields: [
 				{
 					name: 'Input given',
-					value: `Time Epoch: \`${epoch}\` \nDate: ${date} \nTime: ${time} ${meridiem} \nUTC: ${utcOff}`,
+					value: `Time Epoch: \`${epoch}\` \nDate: ${datey} \nTime: ${time} \nUTC: ${utcOff}`,
 				},
 				{
 					name: 'Format 1',
@@ -284,9 +266,8 @@ module.exports = {
 		const utcBool = /^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g.test(
 			utcOff,
 		);
-
 		try {
-			if (utcBool && dateBool) {
+			if (utcBool) {
 				const msg = await interaction.reply({
 					embeds: [tagOutput],
 					fetchReply: true,
@@ -333,39 +314,23 @@ module.exports = {
 				const errEmb = {
 					color: '0xf1efef',
 					title: 'Invalid Input!',
-					description: `Please check the inputs you have provided!\n\nPossible reasons for incorrect inputs:\nTimezone was incorrect (even after processing) \nDate is invalid (Day \`${day}\` doesn't exist in Month \`${month}\` in the Year \`${year}\`) \nTime is invalid (Incorrect minute \`${min}\`)`,
+					description: 'Please check the inputs you have provided!',
 					fields: [
 						{
-							name: 'Correct Timezone examples',
-							value: '`+05:30` \n`-04:00` \n`+00:00`',
+							name: 'Inputs *before* processing',
+							value: `Date: \`${year}-${month}-${date}\` \nTime: \`${hour}:${minute} ${meridiem}\` \nTimezone: \`${oldUtc}\``,
 						},
 						{
-							name: 'Examples which will be processed',
-							value: '`530` = `+05:30` \n`-4` = `-04:00` \n`0` = `+00:00`',
-						},
-						{
-							name: 'Your Timezone Input *before* processing',
-							value: `\`${oldUtc}\``,
-						},
-						{
-							name: 'Your Timezone Input *after* processing',
-							value: `\`${utcOff}\``,
-						},
-						{
-							name: 'Your Date input (YYYY-MM-DD)',
-							value: `\`${date}\``,
-						},
-						{
-							name: 'Your Time input (HH:MM)',
-							value: `\`${time}\``,
+							name: 'Inputs *after* processing',
+							value: `Date (library): \`${daystr.format('YYYY-MM-DD')}\` \nTime (library): \`${daystr.format('hh:mm a')}\` \nTimezone (processed): \`${utcOff}\` \nTimezone (library):\`${daystr.format('Z')}\``,
 						},
 						{
 							name: 'Regex used for evaluating TimeZone',
 							value: '`/^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g`',
 						},
 						{
-							name: 'Regex used for evaluating Time',
-							value: '`/^((0?[1-9]{1})|(1{1}[0-2]{1}))((:[0-5][0-9])?)$/gm`',
+							name: 'Library & UTC mode',
+							value: `Dayjs Library. UTC Mode: \`${daystr.$u}\``,
 						},
 					],
 				};
