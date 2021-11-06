@@ -2,8 +2,6 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(customParseFormat);
-const objectSupport = require('dayjs/plugin/objectSupport');
-dayjs.extend(objectSupport);
 const utc = require('dayjs/plugin/utc');
 dayjs.extend(utc);
 const { MessageActionRow, MessageButton } = require('discord.js');
