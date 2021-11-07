@@ -229,8 +229,7 @@ module.exports = {
 		const tagOutput = {
 			color: '0xf1efef',
 			title: 'Time Tag Generated!',
-			description:
-        'Click on corresponding button to get the time tag in your desired format! ',
+			description: 'Click on corresponding button to get the time tag in your desired format! ',
 			fields: [
 				{
 					name: 'Input given',
@@ -448,8 +447,7 @@ module.exports = {
 		}
 		catch (error) {
 			console.error(error);
-			return interaction.reply({ contents:
-				`Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``, components:[errRow] },
+			return interaction.reply({ contents: `Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``, components:[errRow] },
 			);
 		}
 	},

@@ -248,8 +248,7 @@ module.exports = {
 		}
 		catch (error) {
 			console.error(error);
-			return interaction.reply({ contents:
-				`Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``, components:[errRow] },
+			return interaction.reply({ contents: `Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``, components:[errRow] },
 			);
 		}
 	},
