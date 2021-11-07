@@ -18,7 +18,7 @@ module.exports = {
 	apps : [{
 		name: 'Time Tag Bot',
 		script: 'npm',
-		node_args:'start',
+		args:'start',
 		watch: '.',
 		cwd: '/Discord-Time-Tag-Bot',
 	}],
@@ -26,8 +26,8 @@ module.exports = {
 	deploy : {
 		production : {
 			ref  : 'origin/master',
-			repo : 'https://github.com/MRDGH2821/Discord-Time-Tag-Bot.git',
-			path : '/Discord-Time-Tag-Bot',
+			repo : 'GIT_REPOSITORY',
+			path : 'https://github.com/MRDGH2821/Discord-Time-Tag-Bot',
 			'pre-deploy-local': 'git pull',
 			'post-deploy' : 'npm install && pm2 reload pm2.config.js --env production',
 			'pre-setup': '',
