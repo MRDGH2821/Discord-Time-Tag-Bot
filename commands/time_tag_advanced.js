@@ -6,6 +6,67 @@ const utc = require('dayjs/plugin/utc');
 dayjs.extend(utc);
 const { MessageActionRow, MessageButton } = require('discord.js');
 
+function checkYear(year) {
+
+	// Return true if year is a multiple
+	// of 4 and not multiple of 100.
+	// OR year is multiple of 400.
+	return (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0));
+}
+function DateTimeCheck(year, month, day, min) {
+	year = Number(year);
+	month = Number(month);
+	day = Number(day);
+	min = Number(min);
+
+	let validity;
+
+	if (month === 1 || month === 3 || month === 5 || month === 7 || month === 8 || month === 10 || month === 12) {
+		// January, March, May, July, August, October, December check.
+		if (day <= 31) {
+			validity = true;
+		}
+		else {
+			validity = false;
+		}
+	}
+	else if (month === 4 || month === 6 || month == 9 || month === 11) {
+		// April, June, September, November check.
+		if (day <= 30) {
+			validity = true;
+		}
+		else {
+			validity = false;
+		}
+	}
+	else if (month === 2) {
+		// februray check
+		if (!checkYear(year)) {
+			if (day <= 28) {
+				validity = true;
+			}
+			else {
+				validity = false;
+			}
+		}
+		else if (day <= 29) {
+			validity = true;
+		}
+		else {
+			validity = false;
+		}
+	}
+	else {
+		validity = false;
+	}
+
+	if (min > 60) {
+		validity = false;
+	}
+
+	return validity;
+}
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('time_tag_advanced')
@@ -105,7 +166,7 @@ module.exports = {
 
 			// Extract rest of the string for validation
 			utcProcess = utcOff.slice(1);
-			console.log(utcProcess);
+			// console.log(utcProcess);
 
 			if (/:/gm.test(utcProcess)) {
 				// removes colon from timezone
@@ -266,8 +327,11 @@ module.exports = {
 		const utcBool = /^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g.test(
 			utcOff,
 		);
+		const dateBool = DateTimeCheck(year, month, date, minute);
+		console.log(month);
+		console.log(dateBool);
 		try {
-			if (utcBool) {
+			if (utcBool && dateBool) {
 				const msg = await interaction.reply({
 					embeds: [tagOutput],
 					fetchReply: true,
