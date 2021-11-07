@@ -37,7 +37,7 @@ const helpEmbed = new MessageEmbed()
 		},
 		{
 			name: 'Additional Notes',
-			value:'Sometimes it may happen that the inputs do not match with the processed output or library output. One common cause can be that, the input value for particular parameter exceeds the range. So in that case, it will jump to next cycle. For example putting Day as `32` will result in increment of month by 1 & excess day will be substracted. In those cases, please take a screenshot & send it to support server.',
+			value:'Sometimes it may happen that the inputs do not match with the processed output or library output. One common cause can be that, the input value for particular parameter exceeds the range. So in that case, it will jump to next cycle. For example putting Day as `32` will result in increment of month by 1 & excess day will be substracted. In other cases, please take a screenshot & send it to support server.',
 		},
 		{
 			name: 'Bot still not working?',
@@ -74,6 +74,12 @@ const row = new MessageActionRow()
 			.setLabel('GitHub Repository')
 			.setStyle('LINK')
 			.setURL('https://github.com/MRDGH2821/Discord-Time-Tag-Bot'),
+	)
+	.addComponents(
+		new MessageButton()
+			.setLabel('Invite Bot in your server!')
+			.setStyle('LINK')
+			.setURL('https://discord.com/api/oauth2/authorize?client_id=890243200579694672&permissions=274878188544&scope=bot%20applications.commands'),
 	);
 
 module.exports = {
