@@ -16,6 +16,7 @@
 */
 module.exports = {
 	apps : [{
+		name: 'Time Tag Bot',
 		script: 'npm',
 		node_args:'start',
 		watch: '.',
