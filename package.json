@@ -1,11 +1,11 @@
 {
   "name": "discord-time-tag-bot",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "Generating Discord Time Tags made easy!",
   "main": "index.js",
   "scripts": {
     "prestart": "node deploy-commands.js",
-    "start": "node index.js",
+    "start": "node .",
     "predev": "node deploy-commands.js",
     "dev": "nodemon .",
     "test": "echo \"Error: no test specified\" && exit 1"

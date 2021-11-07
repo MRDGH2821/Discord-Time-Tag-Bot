@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 const { MessageActionRow, MessageButton } = require('discord.js');
+const { version } = require('../package.json');
 
 const helpEmbed = new MessageEmbed()
 	.setColor('#F1EFEF')
@@ -41,8 +42,8 @@ const helpEmbed = new MessageEmbed()
 		{
 			name: 'Regex Credits',
 			value: 'https://regex101.com/library/cE5uE3',
-		},
-	);
+		})
+	.setFooter(`Bot Version: ${version}`);
 
 const row = new MessageActionRow()
 	.addComponents(
