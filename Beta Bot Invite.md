@@ -6,6 +6,8 @@ Purely kept for Developer's reference not public.
 
 [Invite Link](https://discord.com/api/oauth2/authorize?client_id=902515336438509578&permissions=274877925376&scope=bot%20applications.commands)
 
+If you invite the beta bot in your server, commands will **not** show up.
+
 To see this bot in action, you may join [here](https://discord.gg/6xmJtmnWYx)
 
 ## Beta Permissions
