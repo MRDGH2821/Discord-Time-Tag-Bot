@@ -141,6 +141,7 @@ module.exports = {
 				)
 				.setRequired(true),
 		),
+
 	async execute(interaction) {
 		const year = interaction.options.getInteger('year');
 		let month = interaction.options.getInteger('month');
@@ -223,7 +224,6 @@ module.exports = {
 		const daystr = dayjs(`${year}-${month}-${date} ${hour}:${minute} ${meridiem} ${utcOff}`, 'YYYY-MM-DD hh:mm a Z').utc();
 		const datey = `${year}-${month}-${date}`;
 		const time = `${hour}:${minute}`;
-
 		const epoch = daystr.unix();
 
 		const tagOutput = {
@@ -324,12 +324,48 @@ module.exports = {
 					.setLabel('Format 8')
 					.setStyle('PRIMARY'),
 			);
+
 		const utcBool = /^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g.test(
 			utcOff,
 		);
 		const dateBool = DateTimeCheck(year, month, date, minute);
-		console.log(month);
-		console.log(dateBool);
+		// console.log(month);
+		// console.log(dateBool);
+
+		const errRow = new MessageActionRow()
+			.addComponents(
+				new MessageButton()
+					.setLabel('Join Support Server')
+					.setStyle('LINK')
+					.setURL('https://discord.gg/MPtE9zsBs5'),
+			)
+			.addComponents(
+				new MessageButton()
+					.setLabel('Submit an Issue at GitHub')
+					.setStyle('LINK')
+					.setURL('https://github.com/MRDGH2821/Discord-Time-Tag-Bot/issues'),
+			)
+			.addComponents(
+				new MessageButton()
+					.setLabel('Backup Time Tag Generator')
+					.setStyle('LINK')
+					.setURL('https://hammertime.djdavid98.art/'),
+			);
+
+		const bkpRow = new MessageActionRow()
+			.addComponents(
+				new MessageButton()
+					.setLabel('Backup Time Tag Generator')
+					.setStyle('LINK')
+					.setURL('https://hammertime.djdavid98.art/'),
+			)
+			.addComponents(
+				new MessageButton()
+					.setLabel('Invite Bot in your server!')
+					.setStyle('LINK')
+					.setURL('https://discord.com/api/oauth2/authorize?client_id=890243200579694672&permissions=274878188544&scope=bot%20applications.commands'),
+			);
+
 		try {
 			if (utcBool && dateBool) {
 				const msg = await interaction.reply({
@@ -371,7 +407,7 @@ module.exports = {
 				collector.on('end', collected => {
 					console.log(`Collected ${collected.size} interactions.`);
 					tagOutput.footer.text = 'Time out! Re-run the command again.';
-					return interaction.editReply({ embeds: [tagOutput], components: [] });
+					return interaction.editReply({ embeds: [tagOutput], components: [bkpRow] });
 				});
 			}
 			else {
@@ -396,19 +432,24 @@ module.exports = {
 							name: 'Library & UTC mode',
 							value: `Dayjs Library. UTC Mode: \`${daystr.$u}\``,
 						},
+						{
+							name: 'Possible Reasons for invalid input',
+							value: 'Processed timezone is not matching with input provided, Date doesn\'t exist, Minutes exceed 60',
+						},
 					],
 				};
 
 				return await interaction.reply({
 					embeds: [errEmb],
 					fetchReply: true,
+					components:[errRow],
 				});
 			}
 		}
 		catch (error) {
 			console.error(error);
 			return interaction.reply(
-				`Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \`${error}\``,
+				`Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``,
 			);
 		}
 	},
