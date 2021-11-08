@@ -8,7 +8,7 @@ Purely kept for Developer's reference not public.
 
 If you invite the beta bot in your server, commands will **not** show up.
 
-To see this bot in action, you may join [here](https://discord.gg/6xmJtmnWYx)
+To see this bot in action, join my main [server](https://discord.gg/MPtE9zsBs5) and go to [#►dev-chat](https://discord.com/channels/452119784503640084/881108882569711616/) and check the pins.
 
 ## Beta Permissions
 
