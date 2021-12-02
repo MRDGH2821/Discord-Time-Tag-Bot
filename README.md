@@ -4,7 +4,7 @@ Generating Discord Time Tags made easy!
 
 ~~Currently the Bot is in development.~~ Bot development is supposedly finished. And can be used publicly!
 
-Hosted on my personal Raspberry Pi 2B+.
+Hosted on ~~my personal Raspberry Pi 2B+.~~ Google Cloud VM Instance.
 
 You may invite the bot via this [link](https://discord.com/api/oauth2/authorize?client_id=890243200579694672&permissions=274878188544&scope=bot%20applications.commands)
 
