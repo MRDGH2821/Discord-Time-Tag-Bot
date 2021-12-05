@@ -31,7 +31,7 @@ module.exports = {
 				},
 			},
 			{
-				text: 'to event manager',
+				text: 'an event manager',
 				obj: {
 					type: 'LISTENING',
 				},
