@@ -1,12 +1,11 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageActionRow, MessageButton } = require('discord.js');
-const { DateTimeCheck } = require('../lib/CheckerFunctions.js');
 const dayjs = require('dayjs');
+const { MessageActionRow, MessageButton } = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { DateTimeCheck } = require('../lib/CheckerFunctions.js');
+const utc = require('dayjs/plugin/utc');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(customParseFormat);
-const utc = require('dayjs/plugin/utc');
 dayjs.extend(utc);
-
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -162,7 +161,10 @@ module.exports = {
 			minute = `0${minute}`;
 		}
 
-		const daystr = dayjs(`${year}-${month}-${date} ${hour}:${minute} ${meridiem} ${utcOff}`, 'YYYY-MM-DD hh:mm a Z').utc();
+		const daystr = dayjs(
+			`${year}-${month}-${date} ${hour}:${minute} ${meridiem} ${utcOff}`,
+			'YYYY-MM-DD hh:mm a Z',
+		).utc();
 		const datey = `${year}-${month}-${date}`;
 		const time = `${hour}:${minute}`;
 		const epoch = daystr.unix();
@@ -170,7 +172,8 @@ module.exports = {
 		const tagOutput = {
 			color: '0xf1efef',
 			title: 'Time Tag Generated!',
-			description: 'Click on corresponding button to get the time tag in your desired format! ',
+			description:
+        'Click on corresponding button to get the time tag in your desired format! ',
 			fields: [
 				{
 					name: 'Input given',
@@ -303,7 +306,9 @@ module.exports = {
 				new MessageButton()
 					.setLabel('Invite Bot in your server!')
 					.setStyle('LINK')
-					.setURL('https://discord.com/api/oauth2/authorize?client_id=890243200579694672&permissions=274878188544&scope=bot%20applications.commands'),
+					.setURL(
+						'https://discord.com/api/oauth2/authorize?client_id=890243200579694672&permissions=274878188544&scope=bot%20applications.commands',
+					),
 			);
 
 		try {
@@ -347,7 +352,10 @@ module.exports = {
 				collector.on('end', collected => {
 					console.log(`Collected ${collected.size} interactions.`);
 					tagOutput.footer.text = 'Time out! Re-run the command again.';
-					return interaction.editReply({ embeds: [tagOutput], components: [bkpRow] });
+					return interaction.editReply({
+						embeds: [tagOutput],
+						components: [bkpRow],
+					});
 				});
 			}
 			else {
@@ -362,7 +370,13 @@ module.exports = {
 						},
 						{
 							name: 'Inputs *after* processing',
-							value: `Date (library): \`${daystr.format('YYYY-MM-DD')}\` \nTime (library): \`${daystr.format('hh:mm a')}\` \nTimezone (processed): \`${utcOff}\` \nTimezone (library):\`${daystr.format('Z')}\``,
+							value: `Date (library): \`${daystr.format(
+								'YYYY-MM-DD',
+							)}\` \nTime (library): \`${daystr.format(
+								'hh:mm a',
+							)}\` \nTimezone (processed): \`${utcOff}\` \nTimezone (library):\`${daystr.format(
+								'Z',
+							)}\``,
 						},
 						{
 							name: 'Regex used for evaluating TimeZone',
@@ -374,7 +388,8 @@ module.exports = {
 						},
 						{
 							name: 'Possible Reasons for invalid input',
-							value: 'Processed timezone is not matching with input provided, Date doesn\'t exist, Minutes exceed 60',
+							value:
+                'Processed timezone is not matching with input provided, Date doesn\'t exist, Minutes exceed 60',
 						},
 					],
 				};
@@ -382,14 +397,16 @@ module.exports = {
 				return await interaction.reply({
 					embeds: [errEmb],
 					fetchReply: true,
-					components:[errRow],
+					components: [errRow],
 				});
 			}
 		}
 		catch (error) {
 			console.error(error);
-			return interaction.reply({ contents: `Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``, components:[errRow] },
-			);
+			return interaction.reply({
+				contents: `Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``,
+				components: [errRow],
+			});
 		}
 	},
 };

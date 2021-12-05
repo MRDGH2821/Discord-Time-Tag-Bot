@@ -1,10 +1,10 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageActionRow, MessageButton } = require('discord.js');
-const { DateTimeCheck } = require('../lib/CheckerFunctions.js');
 const dayjs = require('dayjs');
+const { MessageActionRow, MessageButton } = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { DateTimeCheck } = require('../lib/CheckerFunctions.js');
+const utc = require('dayjs/plugin/utc');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(customParseFormat);
-const utc = require('dayjs/plugin/utc');
 dayjs.extend(utc);
 
 module.exports = {
