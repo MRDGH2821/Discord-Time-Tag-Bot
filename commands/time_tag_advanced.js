@@ -1,71 +1,11 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageActionRow, MessageButton } = require('discord.js');
 const dayjs = require('dayjs');
+const { MessageActionRow, MessageButton } = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { DateTimeCheck } = require('../lib/CheckerFunctions.js');
+const utc = require('dayjs/plugin/utc');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(customParseFormat);
-const utc = require('dayjs/plugin/utc');
 dayjs.extend(utc);
-
-function checkYear(year) {
-
-	// Return true if year is a multiple
-	// of 4 and not multiple of 100.
-	// OR year is multiple of 400.
-	return (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0));
-}
-function DateTimeCheck(year, month, day, min) {
-	year = Number(year);
-	month = Number(month);
-	day = Number(day);
-	min = Number(min);
-
-	let validity;
-
-	if (month === 1 || month === 3 || month === 5 || month === 7 || month === 8 || month === 10 || month === 12) {
-		// January, March, May, July, August, October, December check.
-		if (day <= 31) {
-			validity = true;
-		}
-		else {
-			validity = false;
-		}
-	}
-	else if (month === 4 || month === 6 || month == 9 || month === 11) {
-		// April, June, September, November check.
-		if (day <= 30) {
-			validity = true;
-		}
-		else {
-			validity = false;
-		}
-	}
-	else if (month === 2) {
-		// februray check
-		if (!checkYear(year)) {
-			if (day <= 28) {
-				validity = true;
-			}
-			else {
-				validity = false;
-			}
-		}
-		else if (day <= 29) {
-			validity = true;
-		}
-		else {
-			validity = false;
-		}
-	}
-	else {
-		validity = false;
-	}
-
-	if (min > 60) {
-		validity = false;
-	}
-
-	return validity;
-}
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -221,7 +161,10 @@ module.exports = {
 			minute = `0${minute}`;
 		}
 
-		const daystr = dayjs(`${year}-${month}-${date} ${hour}:${minute} ${meridiem} ${utcOff}`, 'YYYY-MM-DD hh:mm a Z').utc();
+		const daystr = dayjs(
+			`${year}-${month}-${date} ${hour}:${minute} ${meridiem} ${utcOff}`,
+			'YYYY-MM-DD hh:mm a Z',
+		).utc();
 		const datey = `${year}-${month}-${date}`;
 		const time = `${hour}:${minute}`;
 		const epoch = daystr.unix();
@@ -229,7 +172,8 @@ module.exports = {
 		const tagOutput = {
 			color: '0xf1efef',
 			title: 'Time Tag Generated!',
-			description: 'Click on corresponding button to get the time tag in your desired format! ',
+			description:
+        'Click on corresponding button to get the time tag in your desired format! ',
 			fields: [
 				{
 					name: 'Input given',
@@ -362,7 +306,9 @@ module.exports = {
 				new MessageButton()
 					.setLabel('Invite Bot in your server!')
 					.setStyle('LINK')
-					.setURL('https://discord.com/api/oauth2/authorize?client_id=890243200579694672&permissions=274878188544&scope=bot%20applications.commands'),
+					.setURL(
+						'https://discord.com/api/oauth2/authorize?client_id=890243200579694672&permissions=274878188544&scope=bot%20applications.commands',
+					),
 			);
 
 		try {
@@ -406,7 +352,10 @@ module.exports = {
 				collector.on('end', collected => {
 					console.log(`Collected ${collected.size} interactions.`);
 					tagOutput.footer.text = 'Time out! Re-run the command again.';
-					return interaction.editReply({ embeds: [tagOutput], components: [bkpRow] });
+					return interaction.editReply({
+						embeds: [tagOutput],
+						components: [bkpRow],
+					});
 				});
 			}
 			else {
@@ -421,7 +370,13 @@ module.exports = {
 						},
 						{
 							name: 'Inputs *after* processing',
-							value: `Date (library): \`${daystr.format('YYYY-MM-DD')}\` \nTime (library): \`${daystr.format('hh:mm a')}\` \nTimezone (processed): \`${utcOff}\` \nTimezone (library):\`${daystr.format('Z')}\``,
+							value: `Date (library): \`${daystr.format(
+								'YYYY-MM-DD',
+							)}\` \nTime (library): \`${daystr.format(
+								'hh:mm a',
+							)}\` \nTimezone (processed): \`${utcOff}\` \nTimezone (library):\`${daystr.format(
+								'Z',
+							)}\``,
 						},
 						{
 							name: 'Regex used for evaluating TimeZone',
@@ -433,7 +388,8 @@ module.exports = {
 						},
 						{
 							name: 'Possible Reasons for invalid input',
-							value: 'Processed timezone is not matching with input provided, Date doesn\'t exist, Minutes exceed 60',
+							value:
+                'Processed timezone is not matching with input provided, Date doesn\'t exist, Minutes exceed 60',
 						},
 					],
 				};
@@ -441,14 +397,16 @@ module.exports = {
 				return await interaction.reply({
 					embeds: [errEmb],
 					fetchReply: true,
-					components:[errRow],
+					components: [errRow],
 				});
 			}
 		}
 		catch (error) {
 			console.error(error);
-			return interaction.reply({ contents: `Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``, components:[errRow] },
-			);
+			return interaction.reply({
+				contents: `Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``,
+				components: [errRow],
+			});
 		}
 	},
 };

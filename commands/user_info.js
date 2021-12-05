@@ -1,10 +1,15 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, time } = require('@discordjs/builders');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('user_info')
 		.setDescription('Display info about yourself.'),
 	async execute(interaction) {
-		return interaction.reply(`Your username: ${interaction.user.username}\nYour ID: ${interaction.user.id}`);
+		const date = new Date();
+		const timeString = time(date);
+		const relative = time(date, 'R');
+		return interaction.reply(
+			`Your username: ${interaction.user.tag}\nYour ID: ${interaction.user.id}\nThe time on which this command was executed: ${timeString}\ni.e. ${relative}`,
+		);
 	},
 };

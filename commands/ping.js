@@ -9,7 +9,7 @@ module.exports = {
 			content: 'Pinging...',
 			fetchReply: true,
 		});
-		interaction.editReply(
+		return interaction.editReply(
 			`Roundtrip latency: ${sent.createdTimestamp -
         interaction.createdTimestamp}ms`,
 		);
