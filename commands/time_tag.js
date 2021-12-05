@@ -1,71 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton } = require('discord.js');
+const { DateTimeCheck } = require('../lib/CheckerFunctions.js');
 const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(customParseFormat);
 const utc = require('dayjs/plugin/utc');
 dayjs.extend(utc);
-
-function checkYear(year) {
-
-	// Return true if year is a multiple
-	// of 4 and not multiple of 100.
-	// OR year is multiple of 400.
-	return (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0));
-}
-function DateTimeCheck(year, month, day, min) {
-	year = Number(year);
-	month = Number(month);
-	day = Number(day);
-	min = Number(min);
-
-	let validity;
-
-	if (month === 1 || month === 3 || month === 5 || month === 7 || month === 8 || month === 10 || month === 12) {
-		// January, March, May, July, August, October, December check.
-		if (day <= 31) {
-			validity = true;
-		}
-		else {
-			validity = false;
-		}
-	}
-	else if (month === 4 || month === 6 || month == 9 || month === 11) {
-		// April, June, September, November check.
-		if (day <= 30) {
-			validity = true;
-		}
-		else {
-			validity = false;
-		}
-	}
-	else if (month === 2) {
-		// februray check
-		if (!checkYear(year)) {
-			if (day <= 28) {
-				validity = true;
-			}
-			else {
-				validity = false;
-			}
-		}
-		else if (day <= 29) {
-			validity = true;
-		}
-		else {
-			validity = false;
-		}
-	}
-	else {
-		validity = false;
-	}
-
-	if (min > 60) {
-		validity = false;
-	}
-
-	return validity;
-}
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -156,7 +96,10 @@ module.exports = {
 			min = `0${min}`;
 		}
 
-		const daystr = dayjs(`${year}-${month}-${day} ${hour}:${min} ${meridiem} +00:00`, 'YYYY-MM-DD hh:mm a Z').utc();
+		const daystr = dayjs(
+			`${year}-${month}-${day} ${hour}:${min} ${meridiem} +00:00`,
+			'YYYY-MM-DD hh:mm a Z',
+		).utc();
 		const epoch = daystr.unix();
 		const tagOutput = {
 			color: '0xf1efef',
@@ -212,11 +155,13 @@ module.exports = {
 				new MessageButton()
 					.setLabel('Invite Bot in your server!')
 					.setStyle('LINK')
-					.setURL('https://discord.com/api/oauth2/authorize?client_id=890243200579694672&permissions=274878188544&scope=bot%20applications.commands'),
+					.setURL(
+						'https://discord.com/api/oauth2/authorize?client_id=890243200579694672&permissions=274878188544&scope=bot%20applications.commands',
+					),
 			);
 		try {
 			if (DateTimeCheck(year, month, day, min)) {
-				await interaction.reply({ embeds: [tagOutput], components:[bkpRow] });
+				await interaction.reply({ embeds: [tagOutput], components: [bkpRow] });
 				await interaction.followUp(`\`<t:${epoch}>\``);
 			}
 			else {
@@ -231,7 +176,9 @@ module.exports = {
 						},
 						{
 							name: 'Inputs *after* processing',
-							value: `Date (library): \`${daystr.format('YYYY-MM-DD')}\` \nTime (library): \`${daystr.format('hh:mm a')}\``,
+							value: `Date (library): \`${daystr.format(
+								'YYYY-MM-DD',
+							)}\` \nTime (library): \`${daystr.format('hh:mm a')}\``,
 						},
 						{
 							name: 'Library & UTC mode',
@@ -243,13 +190,15 @@ module.exports = {
 						},
 					],
 				};
-				await interaction.reply({ embeds:[errEmb], components:[errRow] });
+				await interaction.reply({ embeds: [errEmb], components: [errRow] });
 			}
 		}
 		catch (error) {
 			console.error(error);
-			return interaction.reply({ contents: `Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``, components:[errRow] },
-			);
+			return interaction.reply({
+				contents: `Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``,
+				components: [errRow],
+			});
 		}
 	},
 };
