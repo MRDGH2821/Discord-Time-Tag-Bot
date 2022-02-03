@@ -1,5 +1,5 @@
 {
-  "extends": "eslint:recommended",
+  "extends": "eslint:all",
   "env": {
     "node": true,
     "es6": true
@@ -8,48 +8,30 @@
     "ecmaVersion": 2021
   },
   "rules": {
-    "arrow-spacing": ["warn", { "before": true, "after": true }],
-    "brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
-    "comma-dangle": ["error", "always-multiline"],
-    "comma-spacing": "error",
-    "comma-style": "error",
-    "curly": ["error", "multi-line", "consistent"],
-    "dot-location": ["error", "property"],
-    "handle-callback-err": "off",
-    "indent": ["error", "tab"],
-    "keyword-spacing": "error",
-    "max-nested-callbacks": ["error", { "max": 4 }],
-    "max-statements-per-line": ["error", { "max": 2 }],
+    "strict": "off",
+    "indent": ["error", 2],
     "no-console": "off",
-    "no-empty-function": "error",
-    "no-floating-decimal": "error",
-    "no-inline-comments": "error",
-    "no-lonely-if": "error",
-    "no-multi-spaces": "error",
-    "no-multiple-empty-lines": [
-      "error",
-      { "max": 2, "maxEOF": 1, "maxBOF": 0 }
-    ],
-    "no-shadow": ["error", { "allow": ["err", "resolve", "reject"] }],
-    "no-trailing-spaces": ["error"],
-    "no-var": "error",
-    "object-curly-spacing": ["error", "always"],
-    "prefer-const": "error",
+    "max-len": "off",
     "quotes": ["error", "single"],
-    "semi": ["error", "always"],
-    "space-before-blocks": "error",
-    "space-before-function-paren": [
+    "capitalized-comments": ["error", "never"],
+    "max-lines-per-function": ["off"],
+    "camelcase": "off",
+    "max-statements": ["off"],
+    "object-curly-spacing": ["error", "always"],
+    "quote-props": ["error", "consistent-as-needed"],
+    "dot-location": ["error", "property"],
+    "no-extra-parens": "off",
+    "space-before-function-paren": ["error", "never"],
+    "function-call-argument-newline": ["error", "consistent"],
+    "func-style": ["error", "declaration", { "allowArrowFunctions": true }],
+    "prefer-named-capture-group": "off",
+    "brace-style": ["error", "stroustrup"],
+    "no-magic-numbers": [
       "error",
-      {
-        "anonymous": "never",
-        "named": "never",
-        "asyncArrow": "always"
-      }
+      { "ignoreArrayIndexes": true, "ignoreDefaultValues": true }
     ],
-    "space-in-parens": "error",
-    "space-infix-ops": "error",
-    "space-unary-ops": "error",
-    "spaced-comment": "error",
-    "yoda": "error"
+    "no-await-in-loop": "warn",
+    "padded-blocks": ["error", "never"],
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
   }
 }
