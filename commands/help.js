@@ -1,7 +1,6 @@
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { version } = require('../package.json'),
-
   helpEmbed = new MessageEmbed()
     .setColor('#F1EFEF')
     .setTitle('Help Section')
@@ -15,12 +14,12 @@ const { version } = require('../package.json'),
       {
         name: 'Month',
         value:
-        'Month input should be in `MM` or `m` format. For example `9` or `09`.'
+          'Month input should be in `MM` or `m` format. For example `9` or `09`.'
       },
       {
         name: 'Day',
         value:
-        'Day input should be in `DD` or `d` format. For example `1` or `28`.'
+          'Day input should be in `DD` or `d` format. For example `1` or `28`.'
       },
       { name: 'Hours',
         value: 'Should be in 12-Hour format.' },
@@ -33,17 +32,17 @@ const { version } = require('../package.json'),
       {
         name: 'UTC',
         value:
-        'Takes value in UTC Offset. \nCorrect Examples: \n`+05:00` \n`-06:30` \n`+00:00`.\n\nExamples which will be processed: \n`530` = `+05:30` \n`-4` = `-04:00` \n`0` = `+00:00`\n\nOther than that, time tag will not be generated.'
+          'Takes value in UTC Offset. \nCorrect Examples: \n`+05:00` \n`-06:30` \n`+00:00`.\n\nExamples which will be processed: \n`530` = `+05:30` \n`-4` = `-04:00` \n`0` = `+00:00`\n\nOther than that, time tag will not be generated.'
       },
       {
         name: 'Additional Notes',
         value:
-        'Sometimes it may happen that the inputs do not match with the processed output or library output. One common cause can be that, the input value for particular parameter exceeds the range. So in that case, it will jump to next cycle. For example putting Day as `32` will result in increment of month by 1 & excess day will be substracted. In other cases, please take a screenshot & send it to support server.'
+          'Sometimes it may happen that the inputs do not match with the processed output or library output. One common cause can be that, the input value for particular parameter exceeds the range. So in that case, it will jump to next cycle. For example putting Day as `32` will result in increment of month by 1 & excess day will be substracted. In other cases, please take a screenshot & send it to support server.'
       },
       {
         name: 'Bot still not working?',
         value:
-        'Please join my [server](https://discord.gg/MPtE9zsBs5) & elaborate how you encountered that problem. Incase you are running out of time you may click [here](https://hammertime.djdavid98.art/). You may also submit an issue at [Github Repository](https://github.com/MRDGH2821/Discord-Time-Tag-Bot/issues) \n\n*Btw this site is not affliated with bot developer in any way, it was linked here to reduce your wasted time.*'
+          'Please join my [server](https://discord.gg/MPtE9zsBs5) & elaborate how you encountered that problem. Incase you are running out of time you may click [here](https://hammertime.djdavid98.art/). You may also submit an issue at [Github Repository](https://github.com/MRDGH2821/Discord-Time-Tag-Bot/issues) \n\n*Btw this site is not affliated with bot developer in any way, it was linked here to reduce your wasted time.*'
       },
       {
         name: 'Regex Credits',
@@ -51,7 +50,6 @@ const { version } = require('../package.json'),
       }
     )
     .setFooter(`Bot Version: ${version}`),
-
   row = new MessageActionRow()
     .addComponents(new MessageButton()
       .setLabel('Join Support Server')
@@ -80,7 +78,9 @@ module.exports = {
     .setDescription('The help section to get you started!'),
 
   async execute(interaction) {
-    await interaction.reply({ embeds: [helpEmbed],
-      components: [row] });
+    await interaction.reply({
+      components: [row],
+      embeds: [helpEmbed]
+    });
   }
 };

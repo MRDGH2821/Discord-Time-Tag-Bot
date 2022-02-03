@@ -1,7 +1,6 @@
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./lib/ConfigManager.js'),
-
   client = new Client({
     intents: [Intents.FLAGS.GUILDS],
     partials: [
@@ -9,11 +8,12 @@ const { token } = require('./lib/ConfigManager.js'),
       'REACTION'
     ]
   }),
-
+  commandFiles = fs
+    .readdirSync('./commands')
+    .filter((file) => file.endsWith('.js')),
   eventFiles = fs
     .readdirSync('./events')
     .filter((file) => file.endsWith('.js'));
-
 for (const file of eventFiles) {
   const event = require(`./events/${file}`);
   if (event.once) {
@@ -25,9 +25,6 @@ for (const file of eventFiles) {
 }
 
 client.commands = new Collection();
-const commandFiles = fs
-  .readdirSync('./commands')
-  .filter((file) => file.endsWith('.js'));
 
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
@@ -59,6 +56,7 @@ client.on('interactionCreate', async(interaction) => {
   }
   catch (error) {
     console.error(error);
+    // eslint-disable-next-line consistent-return
     return interaction.reply({
       content: 'There was an error while executing this command!',
       ephemeral: true
