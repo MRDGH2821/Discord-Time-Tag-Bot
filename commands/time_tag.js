@@ -1,7 +1,8 @@
+/* eslint-disable no-magic-numbers */
 const dayjs = require('dayjs');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { DateTimeCheck } = require('../lib/CheckerFunctions.js');
+const { dateTimeCheck } = require('../lib/CheckerFunctions.js');
 const utc = require('dayjs/plugin/utc');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(customParseFormat);
@@ -19,42 +20,26 @@ module.exports = {
       .setName('month')
       .setDescription('Enter Month in MM format')
       .setRequired(true)
-      .addChoice('1', 1)
-      .addChoice('2', 2)
-      .addChoice('3', 3)
-      .addChoice('4', 4)
-      .addChoice('5', 5)
-      .addChoice('6', 6)
-      .addChoice('7', 7)
-      .addChoice('8', 8)
-      .addChoice('9', 9)
-      .addChoice('10', 10)
-      .addChoice('11', 11)
-      .addChoice('12', 12))
+      .setMinValue(1)
+      .setMaxValue(12))
     .addIntegerOption((option) => option
       .setName('day')
       .setDescription('Enter Day in DD format')
-      .setRequired(true))
+      .setRequired(true)
+      .setMinValue(1)
+      .setMaxValue(31))
     .addIntegerOption((option) => option
       .setName('hours')
       .setDescription('Enter Hours in 12-hour format')
       .setRequired(true)
-      .addChoice('1', 1)
-      .addChoice('2', 2)
-      .addChoice('3', 3)
-      .addChoice('4', 4)
-      .addChoice('5', 5)
-      .addChoice('6', 6)
-      .addChoice('7', 7)
-      .addChoice('8', 8)
-      .addChoice('9', 9)
-      .addChoice('10', 10)
-      .addChoice('11', 11)
-      .addChoice('12', 12))
+      .setMinValue(1)
+      .setMaxValue(12))
     .addIntegerOption((option) => option
       .setName('minutes')
       .setDescription('Enter Minutes')
-      .setRequired(true))
+      .setRequired(true)
+      .setMinValue(0)
+      .setMaxValue(60))
     .addStringOption((option) => option
       .setName('meridiem')
       .setDescription('Ante or Post meridiem (AM or PM)')
@@ -63,27 +48,28 @@ module.exports = {
       .addChoice('pm', 'pm')),
 
   async execute(interaction) {
-    const year = interaction.options.getInteger('year');
-    let month = interaction.options.getInteger('month'),
-      day = interaction.options.getInteger('day'),
+    const meridiem = interaction.options.getString('meridiem'),
+      year = interaction.options.getInteger('year');
+    let day = interaction.options.getInteger('day'),
       hour = interaction.options.getInteger('hours'),
-      min = interaction.options.getInteger('minutes');
-    const meridiem = interaction.options.getString('meridiem');
+      min = interaction.options.getInteger('minutes'),
+      month = interaction.options.getInteger('month');
 
     // regex validations for double digit parameters
-    if ((/^\d{1}$/gm).test(month)) {
+    if ((/^\d{1}$/gmu).test(month)) {
       month = `0${month}`;
     }
-    if ((/^\d{1}$/gm).test(day)) {
+    if ((/^\d{1}$/gmu).test(day)) {
       day = `0${day}`;
     }
-    if ((/^\d{1}$/gm).test(hour)) {
+    if ((/^\d{1}$/gmu).test(hour)) {
       hour = `0${hour}`;
     }
-    if ((/^\d{1}$/gm).test(min)) {
+    if ((/^\d{1}$/gmu).test(min)) {
       min = `0${min}`;
     }
 
+    // eslint-disable-next-line one-var
     const daystr = dayjs(
         `${year}-${month}-${day} ${hour}:${min} ${meridiem} +00:00`,
         'YYYY-MM-DD hh:mm a Z'
@@ -92,6 +78,7 @@ module.exports = {
       tagOutput = {
         color: '0xf1efef',
         title: 'Time Tag Generated!',
+        // eslint-disable-next-line sort-keys
         description: 'Following are the inputs given!',
         fields: [
           {
@@ -112,6 +99,7 @@ module.exports = {
           }
         ]
       },
+      // eslint-disable-next-line sort-vars
       errRow = new MessageActionRow()
         .addComponents(new MessageButton()
           .setLabel('Join Support Server')
@@ -125,7 +113,7 @@ module.exports = {
           .setLabel('Backup Time Tag Generator')
           .setStyle('LINK')
           .setURL('https://hammertime.djdavid98.art/')),
-
+      // eslint-disable-next-line sort-vars
       bkpRow = new MessageActionRow()
         .addComponents(new MessageButton()
           .setLabel('Backup Time Tag Generator')
@@ -136,15 +124,18 @@ module.exports = {
           .setStyle('LINK')
           .setURL('https://discord.com/api/oauth2/authorize?client_id=890243200579694672&permissions=274878188544&scope=bot%20applications.commands'));
     try {
-      if (DateTimeCheck(year, month, day, min)) {
-        await interaction.reply({ embeds: [tagOutput],
-          components: [bkpRow] });
+      if (dateTimeCheck(year, month, day)) {
+        await interaction.reply({
+          components: [bkpRow],
+          embeds: [tagOutput]
+        });
         await interaction.followUp(`\`<t:${epoch}>\``);
       }
       else {
         const errEmb = {
           color: '0xf1efef',
           title: 'Invalid Input!',
+          // eslint-disable-next-line sort-keys
           description: 'Please check the inputs you have provided!',
           fields: [
             {
@@ -165,15 +156,17 @@ module.exports = {
             }
           ]
         };
-        await interaction.reply({ embeds: [errEmb],
-          components: [errRow] });
+        await interaction.reply({
+          components: [errRow],
+          embeds: [errEmb]
+        });
       }
     }
     catch (error) {
       console.error(error);
-      return interaction.reply({
-        contents: `Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``,
-        components: [errRow]
+      await interaction.reply({
+        components: [errRow],
+        contents: `Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``
       });
     }
   }

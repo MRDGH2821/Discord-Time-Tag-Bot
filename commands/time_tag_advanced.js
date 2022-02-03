@@ -1,7 +1,9 @@
+/* eslint-disable no-magic-numbers */
+/* eslint-disable max-lines */
 const dayjs = require('dayjs');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { DateTimeCheck } = require('../lib/CheckerFunctions.js');
+const { dateTimeCheck } = require('../lib/CheckerFunctions.js');
 const utc = require('dayjs/plugin/utc');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(customParseFormat);
@@ -19,42 +21,26 @@ module.exports = {
       .setName('month')
       .setDescription('Enter Month in MM format')
       .setRequired(true)
-      .addChoice('1', 1)
-      .addChoice('2', 2)
-      .addChoice('3', 3)
-      .addChoice('4', 4)
-      .addChoice('5', 5)
-      .addChoice('6', 6)
-      .addChoice('7', 7)
-      .addChoice('8', 8)
-      .addChoice('9', 9)
-      .addChoice('10', 10)
-      .addChoice('11', 11)
-      .addChoice('12', 12))
+      .setMinValue(1)
+      .setMaxValue(12))
     .addIntegerOption((option) => option
       .setName('day')
       .setDescription('Enter Day in DD format')
-      .setRequired(true))
+      .setRequired(true)
+      .setMinValue(1)
+      .setMaxValue(31))
     .addIntegerOption((option) => option
       .setName('hours')
       .setDescription('Enter Hours in 12-hour format')
       .setRequired(true)
-      .addChoice('1', 1)
-      .addChoice('2', 2)
-      .addChoice('3', 3)
-      .addChoice('4', 4)
-      .addChoice('5', 5)
-      .addChoice('6', 6)
-      .addChoice('7', 7)
-      .addChoice('8', 8)
-      .addChoice('9', 9)
-      .addChoice('10', 10)
-      .addChoice('11', 11)
-      .addChoice('12', 12))
+      .setMinValue(1)
+      .setMaxValue(12))
     .addIntegerOption((option) => option
       .setName('minutes')
       .setDescription('Enter Minutes in MM format')
-      .setRequired(true))
+      .setRequired(true)
+      .setMinValue(0)
+      .setMaxValue(60))
     .addStringOption((option) => option
       .setName('meridiem')
       .setDescription('Ante or Post meridiem (AM or PM)')
@@ -67,52 +53,56 @@ module.exports = {
       .setRequired(true)),
 
   async execute(interaction) {
-    const year = interaction.options.getInteger('year');
-    let month = interaction.options.getInteger('month'),
-      date = interaction.options.getInteger('day'),
+    let date = interaction.options.getInteger('day'),
       hour = interaction.options.getInteger('hours'),
-      minute = interaction.options.getInteger('minutes');
-    const meridiem = interaction.options.getString('meridiem');
-    let utcOff = interaction.options.getString('utc');
-    const oldUtc = utcOff;
-    let utcProcess;
+      minute = interaction.options.getInteger('minutes'),
+      month = interaction.options.getInteger('month'),
+      utcOff = interaction.options.getString('utc'),
+      utcProcess = '';
+    const meridiem = interaction.options.getString('meridiem'),
+      oldUtc = utcOff,
+      year = interaction.options.getInteger('year');
 
     // timeZone Validator using Regex
-    if ((/^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g).test(utcOff)) {
+    if ((/^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/gu).test(utcOff)) {
       console.log('Timezone is valid.');
     }
     else {
-      if (!(/^(\+|-)/gm).test(utcOff)) {
+      if (!(/^(\+|-)/gmu).test(utcOff)) {
         // if no sign provided, add positive sign by default.
         utcOff = `+${utcOff}`;
       }
       // extract Sign
+      // eslint-disable-next-line no-magic-numbers
       const sign = utcOff.charAt(0);
 
       // extract rest of the string for validation
+      // eslint-disable-next-line no-magic-numbers
       utcProcess = utcOff.slice(1);
       // console.log(utcProcess);
 
-      if ((/:/gm).test(utcProcess)) {
+      if ((/:/gmu).test(utcProcess)) {
         // removes colon from timezone
         utcProcess = utcProcess.split(':').join();
       }
 
-      if ((/^\d{3}$/gm).test(utcProcess)) {
+      if ((/^\d{3}$/gmu).test(utcProcess)) {
         // /three digit processing
-        if ((/^[0-1]{1}[0-2]{1}[0-6]{1}$/gm).test(utcProcess)) {
+        if ((/^[0-1]{1}[0-2]{1}[0-6]{1}$/gmu).test(utcProcess)) {
           // if the number lies in between 000-126
+          // eslint-disable-next-line no-magic-numbers
           utcProcess = `${utcProcess.slice(0, 2)}:${utcProcess.charAt(2)}0`;
         }
         else {
           // in other cases, first digit will be extracted & rest 2 ill be put in end
+          // eslint-disable-next-line no-magic-numbers
           utcProcess = `0${utcProcess.charAt(0)}:${utcProcess.slice(1)}`;
         }
       }
 
-      if ((/^\d{2}$/gm).test(utcProcess)) {
+      if ((/^\d{2}$/gmu).test(utcProcess)) {
         // two digit rocessing
-        if ((/^[1][0-2]$/gm).test(utcProcess)) {
+        if ((/^[1][0-2]$/gmu).test(utcProcess)) {
           // if the two digits are 10,11,12; just append :00
           utcProcess = `${utcProcess}:00`;
         }
@@ -122,7 +112,7 @@ module.exports = {
         }
       }
 
-      if ((/^\d{1}$/gm).test(utcProcess)) {
+      if ((/^\d{1}$/gmu).test(utcProcess)) {
         // single digit processing
         utcProcess = `0${utcProcess}:00`;
       }
@@ -132,32 +122,35 @@ module.exports = {
     }
 
     // regex checker for other variables
-    if ((/^\d{1}$/gm).test(month)) {
+    if ((/^\d{1}$/gmu).test(month)) {
       month = `0${month}`;
     }
-    if ((/^\d{1}$/gm).test(date)) {
+    if ((/^\d{1}$/gmu).test(date)) {
       date = `0${date}`;
     }
-    if ((/^\d{1}$/gm).test(hour)) {
+    if ((/^\d{1}$/gmu).test(hour)) {
       hour = `0${hour}`;
     }
-    if ((/^\d{1}$/gm).test(minute)) {
+    if ((/^\d{1}$/gmu).test(minute)) {
       minute = `0${minute}`;
     }
 
+    // eslint-disable-next-line one-var
     const daystr = dayjs(
         `${year}-${month}-${date} ${hour}:${minute} ${meridiem} ${utcOff}`,
         'YYYY-MM-DD hh:mm a Z'
       ).utc(),
+      // eslint-disable-next-line sort-vars
       datey = `${year}-${month}-${date}`,
-      time = `${hour}:${minute}`,
       epoch = daystr.unix(),
-
+      time = `${hour}:${minute}`,
+      // eslint-disable-next-line sort-vars
       tagOutput = {
         color: '0xf1efef',
         title: 'Time Tag Generated!',
+        // eslint-disable-next-line sort-keys
         description:
-        'Click on corresponding button to get the time tag in your desired format! ',
+          'Click on corresponding button to get the time tag in your desired format! ',
         fields: [
           {
             name: 'Input given',
@@ -200,7 +193,7 @@ module.exports = {
           text: 'Just click on corresponding button to get time tag!'
         }
       },
-
+      // eslint-disable-next-line sort-vars
       row1 = new MessageActionRow()
         .addComponents(new MessageButton()
           .setCustomId('formatone')
@@ -218,6 +211,7 @@ module.exports = {
           .setCustomId('formatfour')
           .setLabel('Format 4')
           .setStyle('PRIMARY')),
+      // eslint-disable-next-line sort-vars
       row2 = new MessageActionRow()
         .addComponents(new MessageButton()
           .setCustomId('formatfive')
@@ -235,15 +229,16 @@ module.exports = {
           .setCustomId('formateight')
           .setLabel('Format 8')
           .setStyle('PRIMARY')),
-
-      utcBool = (/^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/g).test(utcOff),
-      dateBool = DateTimeCheck(year, month, date, minute),
+      utcBool = (/^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/gu).test(utcOff),
+      // eslint-disable-next-line sort-vars
+      dateBool = dateTimeCheck(year, month, date),
 
       /*
        * console.log(month);
        * console.log(dateBool);
        */
 
+      // eslint-disable-next-line sort-vars
       errRow = new MessageActionRow()
         .addComponents(new MessageButton()
           .setLabel('Join Support Server')
@@ -257,7 +252,7 @@ module.exports = {
           .setLabel('Backup Time Tag Generator')
           .setStyle('LINK')
           .setURL('https://hammertime.djdavid98.art/')),
-
+      // eslint-disable-next-line sort-vars
       bkpRow = new MessageActionRow()
         .addComponents(new MessageButton()
           .setLabel('Backup Time Tag Generator')
@@ -271,50 +266,50 @@ module.exports = {
     try {
       if (utcBool && dateBool) {
         const msg = await interaction.reply({
-            embeds: [tagOutput],
-            fetchReply: true,
             components: [
               row1,
               row2
-            ]
+            ],
+            embeds: [tagOutput],
+            fetchReply: true
           }),
-          collector = msg.createMessageComponentCollector({
+          msgcollector = msg.createMessageComponentCollector({
             componentType: 'BUTTON',
             time: 15000
           });
-        collector.on('collect', (i) => {
-          if (i.customId === 'formatone') {
-            i.reply(`\`<t:${epoch}:t>\``);
+        msgcollector.on('collect', (interacted) => {
+          if (interacted.customId === 'formatone') {
+            interacted.reply(`\`<t:${epoch}:t>\``);
           }
-          else if (i.customId === 'formattwo') {
-            i.reply(`\`<t:${epoch}:T>\``);
+          else if (interacted.customId === 'formattwo') {
+            interacted.reply(`\`<t:${epoch}:T>\``);
           }
-          else if (i.customId === 'formatthree') {
-            i.reply(`\`<t:${epoch}:d>\``);
+          else if (interacted.customId === 'formatthree') {
+            interacted.reply(`\`<t:${epoch}:d>\``);
           }
-          else if (i.customId === 'formatfour') {
-            i.reply(`\`<t:${epoch}:D>\``);
+          else if (interacted.customId === 'formatfour') {
+            interacted.reply(`\`<t:${epoch}:D>\``);
           }
-          else if (i.customId === 'formatfive') {
-            i.reply(`\`<t:${epoch}:f>\``);
+          else if (interacted.customId === 'formatfive') {
+            interacted.reply(`\`<t:${epoch}:f>\``);
           }
-          else if (i.customId === 'formatsix') {
-            i.reply(`\`<t:${epoch}:F>\``);
+          else if (interacted.customId === 'formatsix') {
+            interacted.reply(`\`<t:${epoch}:F>\``);
           }
-          else if (i.customId === 'formatseven') {
-            i.reply(`\`<t:${epoch}:R>\``);
+          else if (interacted.customId === 'formatseven') {
+            interacted.reply(`\`<t:${epoch}:R>\``);
           }
-          else if (i.customId === 'formateight') {
-            i.reply(`\`<t:${epoch}>\``);
+          else if (interacted.customId === 'formateight') {
+            interacted.reply(`\`<t:${epoch}>\``);
           }
         });
 
-        collector.on('end', (collected) => {
+        msgcollector.on('end', (collected) => {
           console.log(`Collected ${collected.size} interactions.`);
           tagOutput.footer.text = 'Time out! Re-run the command again.';
           return interaction.editReply({
-            embeds: [tagOutput],
-            components: [bkpRow]
+            components: [bkpRow],
+            embeds: [tagOutput]
           });
         });
       }
@@ -322,6 +317,7 @@ module.exports = {
         const errEmb = {
           color: '0xf1efef',
           title: 'Invalid Input!',
+          // eslint-disable-next-line sort-keys
           description: 'Please check the inputs you have provided!',
           fields: [
             {
@@ -348,18 +344,18 @@ module.exports = {
           ]
         };
 
-        return await interaction.reply({
+        await interaction.reply({
+          components: [errRow],
           embeds: [errEmb],
-          fetchReply: true,
-          components: [errRow]
+          fetchReply: true
         });
       }
     }
     catch (error) {
       console.error(error);
-      return interaction.reply({
-        contents: `Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``,
-        components: [errRow]
+      await interaction.reply({
+        components: [errRow],
+        contents: `Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``
       });
     }
   }
