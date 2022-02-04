@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 const dayjs = require('dayjs');
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { bkpRow, errRow } = require('../lib/RowButtons.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { dateTimeCheck } = require('../lib/CheckerFunctions.js');
 const utc = require('dayjs/plugin/utc');
@@ -98,31 +98,8 @@ module.exports = {
             value: `${hour}:${min} ${meridiem} (In UTC)`
           }
         ]
-      },
-      // eslint-disable-next-line sort-vars
-      errRow = new MessageActionRow()
-        .addComponents(new MessageButton()
-          .setLabel('Join Support Server')
-          .setStyle('LINK')
-          .setURL('https://discord.gg/MPtE9zsBs5'))
-        .addComponents(new MessageButton()
-          .setLabel('Submit an Issue at GitHub')
-          .setStyle('LINK')
-          .setURL('https://github.com/MRDGH2821/Discord-Time-Tag-Bot/issues'))
-        .addComponents(new MessageButton()
-          .setLabel('Backup Time Tag Generator')
-          .setStyle('LINK')
-          .setURL('https://hammertime.djdavid98.art/')),
-      // eslint-disable-next-line sort-vars
-      bkpRow = new MessageActionRow()
-        .addComponents(new MessageButton()
-          .setLabel('Backup Time Tag Generator')
-          .setStyle('LINK')
-          .setURL('https://hammertime.djdavid98.art/'))
-        .addComponents(new MessageButton()
-          .setLabel('Invite Bot in your server!')
-          .setStyle('LINK')
-          .setURL('https://discord.com/api/oauth2/authorize?client_id=890243200579694672&permissions=274878188544&scope=bot%20applications.commands'));
+      };
+
     try {
       if (dateTimeCheck(year, month, day)) {
         await interaction.reply({

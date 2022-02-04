@@ -2,6 +2,7 @@
 /* eslint-disable max-lines */
 const dayjs = require('dayjs');
 const { MessageActionRow, MessageButton } = require('discord.js');
+const { bkpRow, errRow } = require('../lib/RowButtons.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { dateTimeCheck } = require('../lib/CheckerFunctions.js');
 const utc = require('dayjs/plugin/utc');
@@ -231,37 +232,12 @@ module.exports = {
           .setStyle('PRIMARY')),
       utcBool = (/^([+|-]{1})([0-1]{1}[0-9]{1}):?([0-6]{1}[0-9]{1})/gu).test(utcOff),
       // eslint-disable-next-line sort-vars
-      dateBool = dateTimeCheck(year, month, date),
+      dateBool = dateTimeCheck(year, month, date);
 
-      /*
-       * console.log(month);
-       * console.log(dateBool);
-       */
-
-      // eslint-disable-next-line sort-vars
-      errRow = new MessageActionRow()
-        .addComponents(new MessageButton()
-          .setLabel('Join Support Server')
-          .setStyle('LINK')
-          .setURL('https://discord.gg/MPtE9zsBs5'))
-        .addComponents(new MessageButton()
-          .setLabel('Submit an Issue at GitHub')
-          .setStyle('LINK')
-          .setURL('https://github.com/MRDGH2821/Discord-Time-Tag-Bot/issues'))
-        .addComponents(new MessageButton()
-          .setLabel('Backup Time Tag Generator')
-          .setStyle('LINK')
-          .setURL('https://hammertime.djdavid98.art/')),
-      // eslint-disable-next-line sort-vars
-      bkpRow = new MessageActionRow()
-        .addComponents(new MessageButton()
-          .setLabel('Backup Time Tag Generator')
-          .setStyle('LINK')
-          .setURL('https://hammertime.djdavid98.art/'))
-        .addComponents(new MessageButton()
-          .setLabel('Invite Bot in your server!')
-          .setStyle('LINK')
-          .setURL('https://discord.com/api/oauth2/authorize?client_id=890243200579694672&permissions=274878188544&scope=bot%20applications.commands'));
+    /*
+     * console.log(month);
+     * console.log(dateBool);
+     */
 
     try {
       if (utcBool && dateBool) {
