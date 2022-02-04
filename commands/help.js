@@ -47,9 +47,12 @@ const { version } = require('../package.json'),
       {
         name: 'Regex Credits',
         value: 'https://regex101.com/library/cE5uE3'
+      },
+      {
+        name: 'Bot version',
+        value: `${version}`
       }
-    )
-    .setFooter(`Bot Version: ${version}`),
+    ),
   row = new MessageActionRow()
     .addComponents(new MessageButton()
       .setLabel('Join Support Server')
