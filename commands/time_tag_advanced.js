@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 /* eslint-disable max-lines */
 const dayjs = require('dayjs');
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const { bkpRow, errRow } = require('../lib/RowButtons.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { dateTimeCheck } = require('../lib/CheckerFunctions.js');
@@ -41,7 +41,7 @@ module.exports = {
       .setDescription('Enter Minutes in MM format')
       .setRequired(true)
       .setMinValue(0)
-      .setMaxValue(60))
+      .setMaxValue(59))
     .addStringOption((option) => option
       .setName('meridiem')
       .setDescription('Ante or Post meridiem (AM or PM)')
@@ -146,13 +146,11 @@ module.exports = {
       epoch = daystr.unix(),
       time = `${hour}:${minute}`,
       // eslint-disable-next-line sort-vars
-      tagOutput = {
-        color: '0xf1efef',
-        title: 'Time Tag Generated!',
-        // eslint-disable-next-line sort-keys
-        description:
-          'Click on corresponding button to get the time tag in your desired format! ',
-        fields: [
+      tagOutput = new MessageEmbed()
+        .setColor('f1efef')
+        .setTitle('Time Tag Generated!')
+        .setDescription('Click on corresponding button to get the time tag in your desired format!')
+        .addFields([
           {
             name: 'Input given',
             value: `Time Epoch: \`${epoch}\` \nDate: ${datey} \nTime: ${time} \nUTC: ${utcOff}`
@@ -189,11 +187,7 @@ module.exports = {
             name: 'Format 8',
             value: `\`<t:${epoch}>\` <t:${epoch}>`
           }
-        ],
-        footer: {
-          text: 'Just click on corresponding button to get time tag!'
-        }
-      },
+        ]),
       // eslint-disable-next-line sort-vars
       row1 = new MessageActionRow()
         .addComponents(new MessageButton()
@@ -282,7 +276,6 @@ module.exports = {
 
         msgcollector.on('end', (collected) => {
           console.log(`Collected ${collected.size} interactions.`);
-          tagOutput.footer.text = 'Time out! Re-run the command again.';
           return interaction.editReply({
             components: [bkpRow],
             embeds: [tagOutput]
@@ -290,12 +283,11 @@ module.exports = {
         });
       }
       else {
-        const errEmb = {
-          color: '0xf1efef',
-          title: 'Invalid Input!',
-          // eslint-disable-next-line sort-keys
-          description: 'Please check the inputs you have provided!',
-          fields: [
+        const errEmb = new MessageEmbed()
+          .setColor('f1efef')
+          .setTitle('Invalid Input!')
+          .setDescription('Please check the inputs you have provided!')
+          .addFields([
             {
               name: 'Inputs *before* processing',
               value: `Date: \`${year}-${month}-${date}\` \nTime: \`${hour}:${minute} ${meridiem}\` \nTimezone: \`${oldUtc}\``
@@ -315,11 +307,9 @@ module.exports = {
             {
               name: 'Possible Reasons for invalid input',
               value:
-                'Processed timezone is not matching with input provided, Date doesn\'t exist, Minutes exceed 60'
+                'Processed timezone is not matching with input provided, Date doesn\'t exist.'
             }
-          ]
-        };
-
+          ]);
         await interaction.reply({
           components: [errRow],
           embeds: [errEmb],

@@ -5,6 +5,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { dateTimeCheck } = require('../lib/CheckerFunctions.js');
 const utc = require('dayjs/plugin/utc');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
+const { MessageEmbed } = require('discord.js');
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
 
@@ -39,7 +40,7 @@ module.exports = {
       .setDescription('Enter Minutes')
       .setRequired(true)
       .setMinValue(0)
-      .setMaxValue(60))
+      .setMaxValue(59))
     .addStringOption((option) => option
       .setName('meridiem')
       .setDescription('Ante or Post meridiem (AM or PM)')
@@ -75,12 +76,11 @@ module.exports = {
         'YYYY-MM-DD hh:mm a Z'
       ).utc(),
       epoch = daystr.unix(),
-      tagOutput = {
-        color: '0xf1efef',
-        title: 'Time Tag Generated!',
-        // eslint-disable-next-line sort-keys
-        description: 'Following are the inputs given!',
-        fields: [
+      tagOutput = new MessageEmbed()
+        .setColor('f1efef')
+        .setTitle('Time Tag Generated!')
+        .setDescription('Following are the inputs given!')
+        .addFields([
           {
             name: 'Time Epoch',
             value: `\`${epoch}\``
@@ -97,8 +97,7 @@ module.exports = {
             name: 'Time',
             value: `${hour}:${min} ${meridiem} (In UTC)`
           }
-        ]
-      };
+        ]);
 
     try {
       if (dateTimeCheck(year, month, day)) {
@@ -109,12 +108,11 @@ module.exports = {
         await interaction.followUp(`\`<t:${epoch}>\``);
       }
       else {
-        const errEmb = {
-          color: '0xf1efef',
-          title: 'Invalid Input!',
-          // eslint-disable-next-line sort-keys
-          description: 'Please check the inputs you have provided!',
-          fields: [
+        const errEmb = new MessageEmbed()
+          .setColor('f1efef')
+          .setTitle('Invalid Input!')
+          .setDescription('Please check the inputs you have provided!')
+          .addFields([
             {
               name: 'Inputs *before* processing',
               value: `Date: \`${year}-${month}-${day}\` \nTime: \`${hour}:${min} ${meridiem}\``
@@ -129,10 +127,10 @@ module.exports = {
             },
             {
               name: 'Possible Reasons for invalid input',
-              value: 'Date doesn\'t exist or Minutes exceed 60'
+              value: 'Date doesn\'t exist.'
             }
-          ]
-        };
+          ]);
+
         await interaction.reply({
           components: [errRow],
           embeds: [errEmb]
