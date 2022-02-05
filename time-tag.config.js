@@ -13,7 +13,7 @@ module.exports = {
     },
     {
       autorestart: false,
-      name: 'TTG Deploy',
+      name: 'Deploy TTG Bot',
       script: './deploy-check.js',
       watch: false
     }
