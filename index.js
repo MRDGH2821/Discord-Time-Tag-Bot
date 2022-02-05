@@ -1,3 +1,4 @@
+require('./deploy-check.js');
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./lib/ConfigManager.js'),
