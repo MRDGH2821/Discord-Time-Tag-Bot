@@ -18,7 +18,7 @@ Bot Permissions -
 
 1.  Clone this repo.
 2.  Create a copy of the file `.env.sample` and rename it to `.env`.
-3.  Put relevant data in the `.env` file -
+3.  Put relevant data in the `.env.prod` file -
 
 ```env
 DISCORD_CLIENT_ID = insert client ID
