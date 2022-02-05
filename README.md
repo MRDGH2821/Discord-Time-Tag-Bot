@@ -34,7 +34,7 @@ For more info click [here](https://discordjs.guide/preparations/setting-up-a-bot
 You may also use pm2. Check the guide [here](https://discordjs.guide/improving-dev-environment/pm2.html)
 
 ```bash
-pm2 start time-tag.pm2.js
+pm2 start time-tag.config.js
 ```
 
 ## How to update self-hosted version?/How to reset the Bot code?
