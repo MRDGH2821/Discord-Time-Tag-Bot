@@ -1,21 +1,34 @@
 {
   "name": "discord-time-tag-bot",
-  "version": "1.2.1",
+  "version": "1.3.0",
+  "private": true,
   "description": "Generating Discord Time Tags made easy!",
   "main": "index.js",
   "scripts": {
     "prestart": "node deploy-commands.js",
-    "start": "node .",
+    "start": "node index.js",
     "predev": "node deploy-commands.js",
-    "dev": "nodemon .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "commit": "cz",
+    "lint": "eslint . --fix",
+    "pretty": "prettier --write .",
+    "postpretty": "npm run lint"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MRDGH2821/Discord-Time-Tag-Bot.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "discord",
+    "time",
+    "tag",
+    "time tag"
+  ],
+  "author": {
+    "name": "MRDGH2821",
+    "url": "http://bit.ly/mrdgh2821"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/MRDGH2821/Discord-Time-Tag-Bot/issues"
@@ -24,11 +37,22 @@
   "dependencies": {
     "@discordjs/builders": "^0.12.0",
     "@discordjs/rest": "^0.3.0",
+    "custom-env": "^2.0.1",
     "dayjs": "^1.10.7",
     "discord-api-types": "^0.26.1",
     "discord.js": "^13.6.0"
   },
   "devDependencies": {
-    "eslint": "^8.8.0"
-  }
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.8.0",
+    "prettier": "^2.5.1",
+    "prettier-config-mrdgh2821": "^1.0.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "prettier": "prettier-config-mrdgh2821"
 }

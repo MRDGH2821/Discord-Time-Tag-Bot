@@ -17,14 +17,13 @@ Bot Permissions -
 ## Hosting
 
 1.  Clone this repo.
-2.  Create a file named `config.json` & put the given text -
+2.  Create a copy of the file `.env.sample` and rename it to `.env`.
+3.  Put relevant data in the `.env` file -
 
-```json
-{
-  "token": "insert bot token",
-  "clientId": "insert bot clientID",
-  "guildId": "insert one of your server's ID"
-}
+```env
+DISCORD_CLIENT_ID = insert client ID
+DISCORD_TOKEN = insert bot token
+DISCORD_GUILD_ID = insert test server ID
 ```
 
 3.  Install dependencies by using `npm install`.
