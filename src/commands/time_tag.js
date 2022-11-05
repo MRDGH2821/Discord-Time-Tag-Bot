@@ -1,11 +1,12 @@
 /* eslint-disable no-magic-numbers */
 const dayjs = require('dayjs');
-const { bkpRow, errRow } = require('../lib/RowButtons.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { dateTimeCheck } = require('../lib/CheckerFunctions.js');
 const utc = require('dayjs/plugin/utc');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 const { MessageEmbed } = require('discord.js');
+const { dateTimeCheck } = require('../lib/CheckerFunctions.js');
+const { bkpRow, errRow } = require('../lib/RowButtons.js');
+
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
 
@@ -13,10 +14,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('time_tag')
     .setDescription('Generates Time tag in UTC! Simple & Easy!')
-    .addIntegerOption((option) => option
-      .setName('year')
-      .setDescription('Enter Year in YYYY format')
-      .setRequired(true))
+    .addIntegerOption((option) => option.setName('year').setDescription('Enter Year in YYYY format').setRequired(true))
     .addIntegerOption((option) => option
       .setName('month')
       .setDescription('Enter Month in MM format')
@@ -49,31 +47,31 @@ module.exports = {
       .addChoice('pm', 'pm')),
 
   async execute(interaction) {
-    const meridiem = interaction.options.getString('meridiem'),
-      year = interaction.options.getInteger('year');
-    let day = interaction.options.getInteger('day'),
-      hour = interaction.options.getInteger('hours'),
-      min = interaction.options.getInteger('minutes'),
-      month = interaction.options.getInteger('month');
+    const meridiem = interaction.options.getString('meridiem');
+    const year = interaction.options.getInteger('year');
+    let day = interaction.options.getInteger('day');
+    let hour = interaction.options.getInteger('hours');
+    let min = interaction.options.getInteger('minutes');
+    let month = interaction.options.getInteger('month');
 
     // regex validations for double digit parameters
-    if ((/^\d{1}$/gmu).test(month)) {
+    if (/^\d{1}$/gmu.test(month)) {
       month = `0${month}`;
     }
-    if ((/^\d{1}$/gmu).test(day)) {
+    if (/^\d{1}$/gmu.test(day)) {
       day = `0${day}`;
     }
-    if ((/^\d{1}$/gmu).test(hour)) {
+    if (/^\d{1}$/gmu.test(hour)) {
       hour = `0${hour}`;
     }
-    if ((/^\d{1}$/gmu).test(min)) {
+    if (/^\d{1}$/gmu.test(min)) {
       min = `0${min}`;
     }
 
     // eslint-disable-next-line one-var
     const daystr = dayjs(
         `${year}-${month}-${day} ${hour}:${min} ${meridiem} +00:00`,
-        'YYYY-MM-DD hh:mm a Z'
+        'YYYY-MM-DD hh:mm a Z',
       ).utc(),
       epoch = daystr.unix(),
       tagOutput = new MessageEmbed()
@@ -83,31 +81,30 @@ module.exports = {
         .addFields([
           {
             name: 'Time Epoch',
-            value: `\`${epoch}\``
+            value: `\`${epoch}\``,
           },
           {
             name: 'Time Tag',
-            value: `<t:${epoch}>`
+            value: `<t:${epoch}>`,
           },
           {
             name: 'Date',
-            value: `${year}-${month}-${day}`
+            value: `${year}-${month}-${day}`,
           },
           {
             name: 'Time',
-            value: `${hour}:${min} ${meridiem} (In UTC)`
-          }
+            value: `${hour}:${min} ${meridiem} (In UTC)`,
+          },
         ]);
 
     try {
       if (dateTimeCheck(year, month, day)) {
         await interaction.reply({
           components: [bkpRow],
-          embeds: [tagOutput]
+          embeds: [tagOutput],
         });
         await interaction.followUp(`\`<t:${epoch}>\``);
-      }
-      else {
+      } else {
         const errEmb = new MessageEmbed()
           .setColor('f1efef')
           .setTitle('Invalid Input!')
@@ -115,34 +112,35 @@ module.exports = {
           .addFields([
             {
               name: 'Inputs *before* processing',
-              value: `Date: \`${year}-${month}-${day}\` \nTime: \`${hour}:${min} ${meridiem}\``
+              value: `Date: \`${year}-${month}-${day}\` \nTime: \`${hour}:${min} ${meridiem}\``,
             },
             {
               name: 'Inputs *after* processing',
-              value: `Date (library): \`${daystr.format('YYYY-MM-DD')}\` \nTime (library): \`${daystr.format('hh:mm a')}\``
+              value: `Date (library): \`${daystr.format(
+                'YYYY-MM-DD',
+              )}\` \nTime (library): \`${daystr.format('hh:mm a')}\``,
             },
             {
               name: 'Library & UTC mode',
-              value: `Dayjs Library. UTC Mode: \`${daystr.$u}\``
+              value: `Dayjs Library. UTC Mode: \`${daystr.$u}\``,
             },
             {
               name: 'Possible Reasons for invalid input',
-              value: 'Date doesn\'t exist.'
-            }
+              value: "Date doesn't exist.",
+            },
           ]);
 
         await interaction.reply({
           components: [errRow],
-          embeds: [errEmb]
+          embeds: [errEmb],
         });
       }
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error);
       await interaction.reply({
         components: [errRow],
-        contents: `Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``
+        contents: `Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``,
       });
     }
-  }
+  },
 };

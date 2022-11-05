@@ -1,12 +1,13 @@
 const { exec } = require('child_process');
 const crypto = require('crypto');
-const fs = require('fs/promises'),
-  packagePath = './package.json',
-  statPath = './deploy-stats.txt';
+const fs = require('fs/promises');
+
+const packagePath = './package.json';
+const statPath = './deploy-stats.txt';
 
 async function hashCalc(path) {
-  const fileBuffer = await fs.readFile(path),
-    hashSum = crypto.createHash('sha256');
+  const fileBuffer = await fs.readFile(path);
+  const hashSum = crypto.createHash('sha256');
   hashSum.update(fileBuffer);
   // eslint-disable-next-line one-var
   const hex = hashSum.digest('hex');
@@ -23,8 +24,7 @@ async function compare(oldPath, pkgPath) {
       console.log(`Hash stored in ${oldPath} :\n`, hash);
       if (hash === newHash) {
         console.log('\nHashes are same, no need to deploy commands.');
-      }
-      else {
+      } else {
         execFlag = true;
       }
     })
@@ -36,8 +36,7 @@ async function compare(oldPath, pkgPath) {
         exec('node deploy-commands.js', (error, stdout, stderr) => {
           if (error) {
             return error;
-          }
-          else if (stderr) {
+          } if (stderr) {
             return stderr;
           }
           console.log(stdout);

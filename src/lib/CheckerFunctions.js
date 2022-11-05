@@ -5,26 +5,13 @@ function checkLeapYear(year) {
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 }
 
-const monthOf30Days = [
-    4,
-    6,
-    9,
-    11
-  ],
-  monthOf31Days = [
-    1,
-    3,
-    5,
-    7,
-    8,
-    10,
-    12
-  ];
+const monthOf30Days = [4, 6, 9, 11];
+const monthOf31Days = [1, 3, 5, 7, 8, 10, 12];
 
 function dateTimeCheck(yyyy, mm, dd) {
-  const day = Number(dd),
-    month = Number(mm),
-    year = Number(yyyy);
+  const day = Number(dd);
+  const month = Number(mm);
+  const year = Number(yyyy);
 
   let validity = false;
 
@@ -32,38 +19,30 @@ function dateTimeCheck(yyyy, mm, dd) {
     // january, March, May, July, August, October, December check.
     if (day <= 31) {
       validity = true;
-    }
-    else {
+    } else {
       validity = false;
     }
-  }
-  else if (monthOf30Days.includes(month)) {
+  } else if (monthOf30Days.includes(month)) {
     // april, June, September, November check.
     if (day <= 30) {
       validity = true;
-    }
-    else {
+    } else {
       validity = false;
     }
-  }
-  else if (month === 2) {
+  } else if (month === 2) {
     // februray check
     if (!checkLeapYear(year)) {
       if (day <= 28) {
         validity = true;
-      }
-      else {
+      } else {
         validity = false;
       }
-    }
-    else if (day <= 29) {
+    } else if (day <= 29) {
       validity = true;
-    }
-    else {
+    } else {
       validity = false;
     }
-  }
-  else {
+  } else {
     validity = false;
   }
 
@@ -72,5 +51,5 @@ function dateTimeCheck(yyyy, mm, dd) {
 
 module.exports = {
   checkLeapYear,
-  dateTimeCheck
+  dateTimeCheck,
 };

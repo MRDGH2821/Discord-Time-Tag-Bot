@@ -1,25 +1,19 @@
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
-const { token } = require('./lib/ConfigManager.js'),
-  client = new Client({
-    intents: [Intents.FLAGS.GUILDS],
-    partials: [
-      'CHANNEL',
-      'REACTION'
-    ]
-  }),
-  commandFiles = fs
-    .readdirSync('./commands')
-    .filter((file) => file.endsWith('.js')),
-  eventFiles = fs
-    .readdirSync('./events')
-    .filter((file) => file.endsWith('.js'));
+const { token } = require('./lib/ConfigManager.js');
+
+const client = new Client({
+  intents: [Intents.FLAGS.GUILDS],
+  partials: ['CHANNEL', 'REACTION'],
+});
+const commandFiles = fs.readdirSync('./commands').filter((file) => file.endsWith('.js'));
+const eventFiles = fs.readdirSync('./events').filter((file) => file.endsWith('.js'));
+
 for (const file of eventFiles) {
   const event = require(`./events/${file}`);
   if (event.once) {
     client.once(event.name, (...args) => event.execute(...args));
-  }
-  else {
+  } else {
     client.on(event.name, (...args) => event.execute(...args));
   }
 }
@@ -40,7 +34,7 @@ client.once('ready', () => {
   console.log('Bot started.');
 });
 
-client.on('interactionCreate', async(interaction) => {
+client.on('interactionCreate', async (interaction) => {
   if (!interaction.isCommand()) {
     return;
   }
@@ -53,13 +47,12 @@ client.on('interactionCreate', async(interaction) => {
 
   try {
     await command.execute(interaction);
-  }
-  catch (error) {
+  } catch (error) {
     console.error(error);
     // eslint-disable-next-line consistent-return
     return interaction.reply({
       content: 'There was an error while executing this command!',
-      ephemeral: true
+      ephemeral: true,
     });
   }
 });
