@@ -9,8 +9,6 @@
     "start": "node index.js",
     "predev": "node deploy-commands.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "commit": "cz",
     "lint": "eslint . --fix",
     "pretty": "prettier --write .",
     "postpretty": "npm run lint"
@@ -46,13 +44,8 @@
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.8.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
     "prettier": "^2.5.1",
-    "prettier-config-mrdgh2821": "^1.0.0"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "prettier": "prettier-config-mrdgh2821"
+    "prettier-config-mrdgh2821": "^3.0.0"
+  }
 }
