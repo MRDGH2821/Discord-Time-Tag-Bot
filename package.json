@@ -5,13 +5,14 @@
   "description": "Generating Discord Time Tags made easy!",
   "main": "index.js",
   "scripts": {
-    "prestart": "node deploy-commands.js",
-    "start": "node index.js",
-    "predev": "node deploy-commands.js",
+    "build": "tsc && tsc-alias",
     "dev": "nodemon index.js",
     "lint": "eslint . --fix",
     "pretty": "prettier --write .",
-    "postpretty": "npm run lint"
+    "postpretty": "npm run lint",
+    "lint:mega": "npx mega-linter-runner@latest --flavor javascript",
+    "predocker": "npm run build",
+    "docker": "docker compose up -d --build"
   },
   "repository": {
     "type": "git",
