@@ -11,6 +11,6 @@ import EnvConfig from './lib/EnvConfig';
   await clusterBot.run();
 
   const interactionBot = new InteractionCommandClient(clusterBot);
-
+  interactionBot.addMultipleIn('./commands/');
   await interactionBot.run().then(() => {});
 })().catch(console.error);
