@@ -1,146 +1,351 @@
 /* eslint-disable no-magic-numbers */
-const dayjs = require('dayjs');
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const utc = require('dayjs/plugin/utc');
-const customParseFormat = require('dayjs/plugin/customParseFormat');
-const { MessageEmbed } = require('discord.js');
-const { dateTimeCheck } = require('../lib/CheckerFunctions.js');
-const { bkpRow, errRow } = require('../lib/RowButtons.js');
+import dayjs from 'dayjs';
+
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import utc from 'dayjs/plugin/utc';
+import {
+  ApplicationCommandOptionTypes,
+  MarkupTimestampStyles,
+  MessageComponentButtonStyles,
+} from 'detritus-client/lib/constants';
+import { InteractionCommand, ParsedArgs } from 'detritus-client/lib/interaction';
+import { ComponentActionRow } from 'detritus-client/lib/utils';
+import { timestamp } from 'detritus-client/lib/utils/markup';
+import { SimpleEmbed } from '../botTypes/interfaces';
+import { COLORS, HAMMER_TIME_LINK } from '../lib/Constants';
+import { utcOption } from '../lib/ReusableComponents';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
 
-module.exports = {
-  data: new SlashCommandBuilder()
-    .setName('time_tag')
-    .setDescription('Generates Time tag in UTC! Simple & Easy!')
-    .addIntegerOption((option) => option.setName('year').setDescription('Enter Year in YYYY format').setRequired(true))
-    .addIntegerOption((option) => option
-      .setName('month')
-      .setDescription('Enter Month in MM format')
-      .setRequired(true)
-      .setMinValue(1)
-      .setMaxValue(12))
-    .addIntegerOption((option) => option
-      .setName('day')
-      .setDescription('Enter Day in DD format')
-      .setRequired(true)
-      .setMinValue(1)
-      .setMaxValue(31))
-    .addIntegerOption((option) => option
-      .setName('hours')
-      .setDescription('Enter Hours in 12-hour format')
-      .setRequired(true)
-      .setMinValue(1)
-      .setMaxValue(12))
-    .addIntegerOption((option) => option
-      .setName('minutes')
-      .setDescription('Enter Minutes')
-      .setRequired(true)
-      .setMinValue(0)
-      .setMaxValue(59))
-    .addStringOption((option) => option
-      .setName('meridiem')
-      .setDescription('Ante or Post meridiem (AM or PM)')
-      .setRequired(true)
-      .addChoice('am', 'am')
-      .addChoice('pm', 'pm')),
+interface TimeTagArgs extends ParsedArgs {
+  hours?: number;
+  minutes?: number;
+  meridian?: 'am' | 'pm' | 'h24';
+  year?: number;
+  month?: number;
+  date?: number;
+  utc?: string;
+  tag_type?: MarkupTimestampStyles | 'let_me_see';
+}
 
-  async execute(interaction) {
-    const meridiem = interaction.options.getString('meridiem');
-    const year = interaction.options.getInteger('year');
-    let day = interaction.options.getInteger('day');
-    let hour = interaction.options.getInteger('hours');
-    let min = interaction.options.getInteger('minutes');
-    let month = interaction.options.getInteger('month');
+export default new InteractionCommand({
+  name: 'time_tag',
+  description: 'Generates Time tag! (Default in UTC)',
+  global: true,
+  disableDm: false,
+  options: [
+    {
+      name: 'hours',
+      description: 'Enter hours in 12 or 24 hour format',
+      type: ApplicationCommandOptionTypes.NUMBER,
+      max_value: 24,
+      maxValue: 24,
+      required: true,
+    },
+    {
+      name: 'minutes',
+      description: 'Enter minutes in m format',
+      type: ApplicationCommandOptionTypes.NUMBER,
+      max_value: 59,
+      maxValue: 59,
+      required: true,
+    },
+    {
+      name: 'meridian',
+      description: 'Enter format type',
+      type: ApplicationCommandOptionTypes.STRING,
+      choices: [
+        {
+          name: '12 hour - am',
+          value: 'am',
+        },
+        {
+          name: '12 hour - pm',
+          value: 'pm',
+        },
+        {
+          name: '24 hour',
+          value: 'h24',
+        },
+      ],
+    },
+    {
+      name: 'year',
+      description: 'Enter year in YYYY format (default current year as per UTC)',
+      type: ApplicationCommandOptionTypes.NUMBER,
+      min_value: 1971,
+      minValue: 1971,
+      default: new Date().getUTCFullYear(),
+    },
+    {
+      name: 'month',
+      description: 'Enter month in MM format (default current month as per UTC)',
+      type: ApplicationCommandOptionTypes.NUMBER,
+      choices: [
+        {
+          name: 'January (01)',
+          value: 0,
+        },
+        {
+          name: 'February (02)',
+          value: 1,
+        },
+        {
+          name: 'March (03)',
+          value: 2,
+        },
+        {
+          name: 'April (04)',
+          value: 3,
+        },
+        {
+          name: 'May (05)',
+          value: 4,
+        },
+        {
+          name: 'June (06)',
+          value: 5,
+        },
+        {
+          name: 'July (07)',
+          value: 6,
+        },
+        {
+          name: 'August (08)',
+          value: 7,
+        },
+        {
+          name: 'September (09)',
+          value: 8,
+        },
+        {
+          name: 'October (10)',
+          value: 9,
+        },
+        {
+          name: 'November (11)',
+          value: 10,
+        },
+        {
+          name: 'December (12)',
+          value: 11,
+        },
+      ],
+      default: new Date().getUTCMonth(),
+    },
+    {
+      name: 'date',
+      description: 'Enter date in DD format (default current date as per UTC)',
+      type: ApplicationCommandOptionTypes.NUMBER,
+      min_value: 1,
+      minValue: 1,
+      max_value: 31,
+      maxValue: 31,
+      default: new Date().getUTCDate(),
+    },
+    utcOption,
+    {
+      name: 'tag_type',
+      description: 'Enter tag type to directly get corresponding tag',
+      type: ApplicationCommandOptionTypes.STRING,
+      choices: [
+        {
+          name: 'Monday, 7 November 2022 20:35',
+          value: MarkupTimestampStyles.BOTH_LONG,
+        },
+        {
+          name: '7 November 2022 20:35',
+          value: MarkupTimestampStyles.BOTH_SHORT,
+        },
+        {
+          name: '7 November 2022',
+          value: MarkupTimestampStyles.DATE_LONG,
+        },
+        {
+          name: '07/11/2022',
+          value: MarkupTimestampStyles.DATE_SHORT,
+        },
+        {
+          name: '20:35:00',
+          value: MarkupTimestampStyles.TIME_LONG,
+        },
+        {
+          name: '20:35',
+          value: MarkupTimestampStyles.TIME_SHORT,
+        },
+        {
+          name: 'In 2 days',
+          value: MarkupTimestampStyles.RELATIVE,
+        },
+        {
+          name: 'Let me see',
+          value: 'let_me_see',
+        },
+      ],
+      default: 'let_me_see',
+    },
+  ],
 
-    // regex validations for double digit parameters
-    if (/^\d{1}$/gmu.test(month)) {
-      month = `0${month}`;
-    }
-    if (/^\d{1}$/gmu.test(day)) {
-      day = `0${day}`;
-    }
-    if (/^\d{1}$/gmu.test(hour)) {
-      hour = `0${hour}`;
-    }
-    if (/^\d{1}$/gmu.test(min)) {
-      min = `0${min}`;
-    }
+  async run(ctx, args: TimeTagArgs) {
+    const newHours = args.meridian === 'pm' ? args.hours! + 12 : args.hours!;
 
-    // eslint-disable-next-line one-var
-    const daystr = dayjs(
-        `${year}-${month}-${day} ${hour}:${min} ${meridiem} +00:00`,
-        'YYYY-MM-DD hh:mm a Z',
-      ).utc(),
-      epoch = daystr.unix(),
-      tagOutput = new MessageEmbed()
-        .setColor('f1efef')
-        .setTitle('Time Tag Generated!')
-        .setDescription('Following are the inputs given!')
-        .addFields([
-          {
-            name: 'Time Epoch',
-            value: `\`${epoch}\``,
-          },
-          {
-            name: 'Time Tag',
-            value: `<t:${epoch}>`,
-          },
-          {
-            name: 'Date',
-            value: `${year}-${month}-${day}`,
-          },
-          {
-            name: 'Time',
-            value: `${hour}:${min} ${meridiem} (In UTC)`,
-          },
-        ]);
+    const dayObj = dayjs.tz(
+      {
+        hour: newHours,
+        minute: args.minutes,
+        year: args.year,
+        month: args.month,
+        date: args.date,
+      },
+      args.utc,
+    );
 
-    try {
-      if (dateTimeCheck(year, month, day)) {
-        await interaction.reply({
-          components: [bkpRow],
-          embeds: [tagOutput],
-        });
-        await interaction.followUp(`\`<t:${epoch}>\``);
-      } else {
-        const errEmb = new MessageEmbed()
-          .setColor('f1efef')
-          .setTitle('Invalid Input!')
-          .setDescription('Please check the inputs you have provided!')
-          .addFields([
-            {
-              name: 'Inputs *before* processing',
-              value: `Date: \`${year}-${month}-${day}\` \nTime: \`${hour}:${min} ${meridiem}\``,
-            },
-            {
-              name: 'Inputs *after* processing',
-              value: `Date (library): \`${daystr.format(
-                'YYYY-MM-DD',
-              )}\` \nTime (library): \`${daystr.format('hh:mm a')}\``,
-            },
-            {
-              name: 'Library & UTC mode',
-              value: `Dayjs Library. UTC Mode: \`${daystr.$u}\``,
-            },
-            {
-              name: 'Possible Reasons for invalid input',
-              value: "Date doesn't exist.",
-            },
-          ]);
+    const epoch = dayObj.unix();
+    const time = `${args.hours}:${args.minutes}`;
 
-        await interaction.reply({
-          components: [errRow],
-          embeds: [errEmb],
-        });
-      }
-    } catch (error) {
-      console.error(error);
-      await interaction.reply({
-        components: [errRow],
-        contents: `Uhhh, sorry an error occured. Please use \`/help\` command & reach out bot developer with error screenshot.\nError dump: \n\`${error}\``,
+    if (args.tag_type !== 'let_me_see') {
+      return ctx.editOrRespond({
+        content: `\`${timestamp(epoch, args.tag_type!)}\``,
       });
     }
+    const format14Row = new ComponentActionRow()
+      .addButton({
+        label: 'Format 1',
+        style: MessageComponentButtonStyles.SECONDARY,
+        async run(btnCtx) {
+          await btnCtx.createMessage({
+            content: timestamp(epoch, MarkupTimestampStyles.BOTH_LONG),
+          });
+        },
+      })
+      .addButton({
+        label: 'Format 2',
+        style: MessageComponentButtonStyles.SECONDARY,
+        async run(btnCtx) {
+          await btnCtx.createMessage({
+            content: timestamp(epoch, MarkupTimestampStyles.BOTH_SHORT),
+          });
+        },
+      })
+      .addButton({
+        label: 'Format 3',
+        style: MessageComponentButtonStyles.SECONDARY,
+        async run(btnCtx) {
+          await btnCtx.createMessage({
+            content: timestamp(epoch, MarkupTimestampStyles.DATE_LONG),
+          });
+        },
+      })
+      .addButton({
+        label: 'Format 4',
+        style: MessageComponentButtonStyles.SECONDARY,
+        async run(btnCtx) {
+          await btnCtx.createMessage({
+            content: timestamp(epoch, MarkupTimestampStyles.DATE_SHORT),
+          });
+        },
+      });
+
+    const format57Row = new ComponentActionRow()
+      .addButton({
+        label: 'Format 5',
+        style: MessageComponentButtonStyles.SECONDARY,
+        async run(btnCtx) {
+          await btnCtx.createMessage({
+            content: timestamp(epoch, MarkupTimestampStyles.TIME_LONG),
+          });
+        },
+      })
+      .addButton({
+        label: 'Format 6',
+        style: MessageComponentButtonStyles.SECONDARY,
+        async run(btnCtx) {
+          await btnCtx.createMessage({
+            content: timestamp(epoch, MarkupTimestampStyles.TIME_SHORT),
+          });
+        },
+      })
+      .addButton({
+        label: 'Format 7',
+        style: MessageComponentButtonStyles.SECONDARY,
+        async run(btnCtx) {
+          await btnCtx.createMessage({
+            content: timestamp(epoch, MarkupTimestampStyles.RELATIVE),
+          });
+        },
+      })
+      .addButton({
+        label: 'Hammer Time website',
+        style: MessageComponentButtonStyles.LINK,
+        url: HAMMER_TIME_LINK,
+      });
+    const tagOutput: SimpleEmbed = {
+      color: COLORS.EMBED_COLOR,
+      title: 'Time Tag Generated!',
+      description: 'Click on corresponding button to get the time tag in your desired format!',
+      fields: [
+        {
+          name: 'Input given',
+          value: `Time Epoch: \`${epoch}\` \nDate: ${args.date} \nTime: ${time} \nUTC: ${
+            args.utc
+          } (${dayObj.tz()})`,
+        },
+        {
+          name: 'Format 1',
+          value: `\`${timestamp(epoch, MarkupTimestampStyles.BOTH_LONG)}\` ${timestamp(
+            epoch,
+            MarkupTimestampStyles.BOTH_LONG,
+          )}`,
+        },
+        {
+          name: 'Format 2',
+          value: `\`${timestamp(epoch, MarkupTimestampStyles.BOTH_SHORT)}\` ${timestamp(
+            epoch,
+            MarkupTimestampStyles.BOTH_SHORT,
+          )}`,
+        },
+        {
+          name: 'Format 3',
+          value: `\`${timestamp(epoch, MarkupTimestampStyles.DATE_LONG)}\` ${timestamp(
+            epoch,
+            MarkupTimestampStyles.DATE_LONG,
+          )}`,
+        },
+        {
+          name: 'Format 4',
+          value: `\`${timestamp(epoch, MarkupTimestampStyles.DATE_SHORT)}\` ${timestamp(
+            epoch,
+            MarkupTimestampStyles.DATE_SHORT,
+          )}`,
+        },
+        {
+          name: 'Format 5',
+          value: `\`${timestamp(epoch, MarkupTimestampStyles.TIME_LONG)}\` ${timestamp(
+            epoch,
+            MarkupTimestampStyles.TIME_LONG,
+          )}`,
+        },
+        {
+          name: 'Format 6',
+          value: `\`${timestamp(epoch, MarkupTimestampStyles.TIME_SHORT)}\` ${timestamp(
+            epoch,
+            MarkupTimestampStyles.TIME_SHORT,
+          )}`,
+        },
+        {
+          name: 'Format 7',
+          value: `\`${timestamp(epoch, MarkupTimestampStyles.RELATIVE)}\` ${timestamp(
+            epoch,
+            MarkupTimestampStyles.RELATIVE,
+          )}`,
+        },
+      ],
+    };
+
+    return ctx.editOrRespond({
+      embed: tagOutput,
+      components: [format14Row, format57Row],
+    });
   },
-};
+});
