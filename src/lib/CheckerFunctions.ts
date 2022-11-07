@@ -1,5 +1,4 @@
-/* eslint-disable no-magic-numbers */
-function checkLeapYear(year) {
+export function checkLeapYear(year: number) {
   // return true if year is a multiple of 4 and not multiple of 100. OR year is multiple of 400.
 
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
@@ -8,48 +7,25 @@ function checkLeapYear(year) {
 const monthOf30Days = [4, 6, 9, 11];
 const monthOf31Days = [1, 3, 5, 7, 8, 10, 12];
 
-function dateTimeCheck(yyyy, mm, dd) {
+export function dateTimeCheck(yyyy: number, mm: number, dd: number) {
   const day = Number(dd);
   const month = Number(mm);
   const year = Number(yyyy);
 
-  let validity = false;
-
   if (monthOf31Days.includes(month)) {
-    // january, March, May, July, August, October, December check.
-    if (day <= 31) {
-      validity = true;
-    } else {
-      validity = false;
-    }
-  } else if (monthOf30Days.includes(month)) {
-    // april, June, September, November check.
-    if (day <= 30) {
-      validity = true;
-    } else {
-      validity = false;
-    }
-  } else if (month === 2) {
-    // februray check
-    if (!checkLeapYear(year)) {
-      if (day <= 28) {
-        validity = true;
-      } else {
-        validity = false;
-      }
-    } else if (day <= 29) {
-      validity = true;
-    } else {
-      validity = false;
-    }
-  } else {
-    validity = false;
+    // January, March, May, July, August, October, December check.
+    return day <= 31;
   }
-
-  return validity;
+  if (monthOf30Days.includes(month)) {
+    // April, June, September, November check.
+    return day <= 30;
+  }
+  if (month === 2) {
+    // February check
+    if (!checkLeapYear(year)) {
+      return day <= 28;
+    }
+    return day <= 29;
+  }
+  return false;
 }
-
-module.exports = {
-  checkLeapYear,
-  dateTimeCheck,
-};
