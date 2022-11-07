@@ -13,7 +13,10 @@
   "noConfigSearch": true,
   "words": [
     "megalinter",
+    "MRDGH",
     "oxsecurity",
+    "postpretty",
+    "predocker",
     "tzdb"
   ],
   "version": "0.2"
