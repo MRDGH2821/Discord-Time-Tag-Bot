@@ -1,14 +1,29 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+import { RequestTypes } from 'detritus-client-rest';
+import { InteractionCommand } from 'detritus-client/lib/interaction';
+import { COLORS } from '../lib/Constants';
 
-module.exports = {
-  data: new SlashCommandBuilder().setName('ping').setDescription('Replies with bot latency!'),
-  async execute(interaction) {
-    const sent = await interaction.reply({
-      content: 'Pinging...',
-      fetchReply: true,
+export default new InteractionCommand({
+  name: 'ping',
+  description: 'Shows bot ping',
+  global: true,
+  disableDm: false,
+
+  async run(context) {
+    const { gateway, rest } = await context.client.ping();
+
+    await context.editOrRespond('Pinging...');
+
+    const pingEmb: RequestTypes.CreateChannelMessageEmbed = {
+      title: '**Pong!**',
+      color: COLORS.EMBED_COLOR,
+      description: `Gateway Ping: ${gateway}ms\nREST Ping: ${rest}ms`,
+    };
+
+    await context.editOrRespond({
+      embeds: [pingEmb],
     });
-    return interaction.editReply(
-      `Roundtrip latency: ${sent.createdTimestamp - interaction.createdTimestamp}ms`,
-    );
   },
-};
+  onRunError(ctw) {
+    console.log(ctw);
+  },
+});
