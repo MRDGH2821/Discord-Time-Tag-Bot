@@ -16,4 +16,4 @@ USER ttg-bot
 
 HEALTHCHECK NONE
 
-CMD ["node", "./out/index.js"]
+CMD ["node", "./out/src/index.js"]
