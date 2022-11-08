@@ -39,8 +39,8 @@ export default new InteractionCommand({
       name: 'hours',
       description: 'Enter hours in 12 or 24 hour format',
       type: ApplicationCommandOptionTypes.NUMBER,
-      max_value: 24,
-      maxValue: 24,
+      max_value: 23,
+      maxValue: 23,
       required: true,
     },
     {
@@ -151,31 +151,31 @@ export default new InteractionCommand({
       type: ApplicationCommandOptionTypes.STRING,
       choices: [
         {
-          name: 'Monday, 7 November 2022 20:35',
+          name: 'Monday, 7 November 2022 20:35 (Long date & time)',
           value: MarkupTimestampStyles.BOTH_LONG,
         },
         {
-          name: '7 November 2022 20:35',
+          name: '7 November 2022 20:35 (Short date & time)',
           value: MarkupTimestampStyles.BOTH_SHORT,
         },
         {
-          name: '7 November 2022',
+          name: '7 November 2022 (Long date)',
           value: MarkupTimestampStyles.DATE_LONG,
         },
         {
-          name: '07/11/2022',
+          name: '07/11/2022 (Short date)',
           value: MarkupTimestampStyles.DATE_SHORT,
         },
         {
-          name: '20:35:00',
+          name: '20:35:00 (Long time)',
           value: MarkupTimestampStyles.TIME_LONG,
         },
         {
-          name: '20:35',
+          name: '20:35 (Short time)',
           value: MarkupTimestampStyles.TIME_SHORT,
         },
         {
-          name: 'In 2 days',
+          name: 'In 2 days (Relative time)',
           value: MarkupTimestampStyles.RELATIVE,
         },
         {
@@ -200,7 +200,6 @@ export default new InteractionCommand({
       },
       args.utc,
     );
-
     const epoch = dayObj.unix();
     const time = `${args.hours}:${args.minutes}`;
 
