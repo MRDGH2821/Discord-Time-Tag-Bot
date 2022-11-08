@@ -27,29 +27,31 @@ export const errRow = new ComponentActionRow()
 export const utcOption: InteractionCommandOptionOptions = {
   name: 'utc',
   description: 'Enter timezone in UTC (default Etc/UTC i.e. +00:00)',
-  type: ApplicationCommandOptionTypes.STRING,
-  default: '0',
+  type: ApplicationCommandOptionTypes.NUMBER,
+  default: 0,
   async onAutoComplete(ctx) {
     const input = ctx.value.toLowerCase();
-    console.log({ input });
+    console.log({ input, actual: ctx.value });
     const foundTZ = searchTZ(input);
 
     const parsedTZ = foundTZ
       .map((timeZone) => ({
         name: encodeInvalid(
-          `${timeZone.name} ${timeZone.abbreviation} ${offSetMinutesToClock(
+          `${encodeInvalid(timeZone.name)} ${timeZone.abbreviation} ${offSetMinutesToClock(
             timeZone.rawOffsetInMinutes,
           )}`,
         ),
-        value: timeZone.rawOffsetInMinutes.toString(),
+        value: timeZone.rawOffsetInMinutes,
       }))
       .slice(0, 23);
 
     parsedTZ.push({
       name: '+00:00 Coordinated Universal Time (UTC)',
-      value: '0',
+      value: 0,
     });
-    console.log({ foundTZ, parsedTZ });
-    return parsedTZ;
+    console.log({ found: foundTZ.length, parsedTZ });
+    ctx.respond({
+      choices: parsedTZ,
+    });
   },
 };

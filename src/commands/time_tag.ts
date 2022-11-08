@@ -2,6 +2,7 @@
 import dayjs from 'dayjs';
 
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import {
   ApplicationCommandOptionTypes,
@@ -14,10 +15,11 @@ import { timestamp } from 'detritus-client/lib/utils/markup';
 import { SimpleEmbed } from '../botTypes/interfaces';
 import { COLORS, HAMMER_TIME_LINK } from '../lib/Constants';
 import { utcOption } from '../lib/ReusableComponents';
-import { decodeInvalid, hourMinuteToClock, searchTZ } from '../lib/Utilities';
+import { hourMinuteToClock, offSetMinutesToClock } from '../lib/Utilities';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
+dayjs.extend(timezone);
 
 interface TimeTagArgs extends ParsedArgs {
   hours?: number;
@@ -26,7 +28,7 @@ interface TimeTagArgs extends ParsedArgs {
   year?: number;
   month?: number;
   date?: number;
-  utc?: string;
+  utc?: number;
   tag_type?: MarkupTimestampStyles | 'let_me_see';
 }
 
@@ -192,21 +194,22 @@ export default new InteractionCommand({
   async run(ctx, args: TimeTagArgs) {
     const newHours = args.meridian === 'pm' ? args.hours! + 12 : args.hours!;
 
-    const decodedTZ = decodeInvalid(args.utc!);
-    const tz = searchTZ(decodedTZ).length > 0 || searchTZ(args.utc!).length > 0 ? decodedTZ : '0';
-
+    // const decodedTZ = decodeInvalid(args.utc!);
+    // const tz = searchTZ(decodedTZ).length > 0 || searchTZ(args.utc!).length > 0 ? decodedTZ : '0'
+    const timeZone = args.utc!;
+    // dayjs.tz.setDefault(timeZone.toString());
     const dayObj = dayjs({
       hour: newHours,
       minute: args.minutes,
       year: args.year,
       month: args.month,
       date: args.date,
-    }).utcOffset(tz, true);
-    const epoch = dayObj.unix();
+    }).utcOffset(timeZone, true);
+
     const time = `${hourMinuteToClock(args.hours!, args.minutes!)} ${
-      args.meridian === 'h24' ? ' ' : args.meridian
+      args.meridian === 'h24' ? '(24-hr)' : args.meridian
     }`;
-    console.log({ dayObj, args, epoch });
+    console.log({ dayObj, args });
     if (args.tag_type !== 'let_me_see') {
       return ctx.editOrRespond({
         content: `\`${timestamp(dayObj.toDate(), args.tag_type!)}\``,
@@ -290,9 +293,11 @@ export default new InteractionCommand({
       fields: [
         {
           name: 'Input given',
-          value: `Time Epoch: \`${epoch}\` \nDate: ${args.year}/${args.month}/${
+          value: `Time Epoch: \`${dayObj.unix()}\` \nDate: ${args.year}/${args.month}/${
             args.date
-          } \nTime: ${time} \nUTC: ${args.utc} (${dayObj.tz()})`,
+          } \nTime: ${time} \nUTC: ${offSetMinutesToClock(args.utc!)} (${offSetMinutesToClock(
+            dayObj.utcOffset(),
+          )})`,
         },
         {
           name: 'Format 1',
@@ -350,5 +355,8 @@ export default new InteractionCommand({
       embed: tagOutput,
       components: [format14Row, format57Row],
     });
+  },
+  onError(ctx, err) {
+    console.error(err);
   },
 });
