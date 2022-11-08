@@ -46,8 +46,8 @@ export default new BotEvent({
         type: ActivityTypes.LISTENING,
       },
     ];
-    const delay = 30000;
-    shardClient.user?.presence?.activity = activities[0];
+    // const delay = 30000;
+    // shardClient.user?.presence?.activity = activities[0];
     // console.log(activities);
     /*
     client.user.setActivity(activities[0].name, activities[0].obj);
