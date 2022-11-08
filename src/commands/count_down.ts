@@ -45,7 +45,8 @@ export default new InteractionCommand({
   ],
 
   async run(ctx, args: CountDownArgs) {
-    const date = dayjs().add(args);
+    const date = dayjs();
+    date.add(args);
     /*
     date.add(args.hours!, 'hours');
     date.add(args.minutes!, 'minutes');
