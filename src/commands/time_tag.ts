@@ -14,6 +14,7 @@ import { timestamp } from 'detritus-client/lib/utils/markup';
 import { SimpleEmbed } from '../botTypes/interfaces';
 import { COLORS, HAMMER_TIME_LINK } from '../lib/Constants';
 import { utcOption } from '../lib/ReusableComponents';
+import { decodeInvalid, hourMinuteToClock, searchTZ } from '../lib/Utilities';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
@@ -191,16 +192,16 @@ export default new InteractionCommand({
   async run(ctx, args: TimeTagArgs) {
     const newHours = args.meridian === 'pm' ? args.hours! + 12 : args.hours!;
 
-    const dayObj = dayjs.tz(
-      {
-        hour: newHours,
-        minute: args.minutes,
-        year: args.year,
-        month: args.month,
-        date: args.date,
-      },
-      args.utc,
-    );
+    const decodedTZ = decodeInvalid(args.utc!);
+    const tz = searchTZ(decodedTZ).length > 0 || searchTZ(args.utc!).length > 0 ? decodedTZ : '0';
+
+    const dayObj = dayjs({
+      hour: newHours,
+      minute: args.minutes,
+      year: args.year,
+      month: args.month,
+      date: args.date,
+    }).utcOffset(tz, true);
     const epoch = dayObj.unix();
     const time = `${hourMinuteToClock(args.hours!, args.minutes!)} ${
       args.meridian === 'h24' ? ' ' : args.meridian
