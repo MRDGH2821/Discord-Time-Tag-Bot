@@ -32,24 +32,35 @@ export const utcOption: InteractionCommandOptionOptions = {
   default: 'Etc/UTC',
   async onAutoComplete(ctx) {
     const input = ctx.value.toLowerCase();
-    return timeZones
-      .filter((timeZone) => {
-        if (
-          Object.values(timeZone)
-            .flat()
-            .some((val) => val.includes(input))
-        ) {
-          return {
-            name: `${timeZone.rawFormat} ${timeZone.abbreviation}`,
-            value: timeZone.name,
-          };
-        }
+    console.log({ input });
+    const foundTZ = timeZones
+      .filter((timeZone) => Object.values(timeZone)
+        .flat()
+        .some((val) => val.includes(input)))
+      .slice(0, 25);
 
-        return {
+    const parsedTZ = foundTZ.map((timeZone) => ({
+      name: `${timeZone.rawFormat} ${timeZone.abbreviation}`,
+      value: timeZone.name,
+    }));
+    parsedTZ.push({
+      name: '+00:00 Coordinated Universal Time (UTC)',
+      value: 'Etc/UTC',
+    });
+    console.log({ foundTZ, parsedTZ });
+    return parsedTZ;
+  },
+};
+
+/*
+return {
           name: '+00:00 Coordinated Universal Time (UTC)',
           value: 'Etc/UTC',
         };
-      })
-      .slice(0, 25);
-  },
-};
+
+         return {
+            name: `${timeZone.rawFormat} ${timeZone.abbreviation}`,
+            value: timeZone.name,
+          };
+
+        */
