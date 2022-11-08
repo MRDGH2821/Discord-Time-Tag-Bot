@@ -12,7 +12,8 @@
     "postpretty": "npm run lint",
     "lint:mega": "npx mega-linter-runner@latest --flavor javascript",
     "predocker": "npm run build",
-    "docker": "docker compose up -d --build"
+    "docker": "docker compose up -d --build",
+    "monitor": "nodemon -r dotenv/config src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -46,13 +47,16 @@
     "@types/node": "^18.11.9",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
+    "dotenv": "^16.0.3",
     "eslint": "^8.26.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
+    "nodemon": "^2.0.20",
     "prettier": "^2.7.1",
     "prettier-config-mrdgh2821": "^3.0.0",
     "prettier-plugin-organize-imports": "^3.1.1",
     "regenerator-runtime": "^0.13.10",
+    "ts-node": "^10.9.1",
     "tsc-alias": "^1.7.0",
     "tsconfig-paths": "^4.1.0",
     "typescript": "^4.8.4"
