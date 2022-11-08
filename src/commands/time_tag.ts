@@ -202,7 +202,9 @@ export default new InteractionCommand({
       args.utc,
     );
     const epoch = dayObj.unix();
-    const time = `${args.hours}:${args.minutes}`;
+    const time = `${hourMinuteToClock(args.hours!, args.minutes!)} ${
+      args.meridian === 'h24' ? ' ' : args.meridian
+    }`;
     console.log({ dayObj, args, epoch });
     if (args.tag_type !== 'let_me_see') {
       return ctx.editOrRespond({
@@ -287,9 +289,9 @@ export default new InteractionCommand({
       fields: [
         {
           name: 'Input given',
-          value: `Time Epoch: \`${epoch}\` \nDate: ${args.date} \nTime: ${time} \nUTC: ${
-            args.utc
-          } (${dayObj.tz()})`,
+          value: `Time Epoch: \`${epoch}\` \nDate: ${args.year}/${args.month}/${
+            args.date
+          } \nTime: ${time} \nUTC: ${args.utc} (${dayObj.tz()})`,
         },
         {
           name: 'Format 1',
