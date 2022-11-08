@@ -16,18 +16,18 @@ Bot Permissions -
 
 ## Hosting
 
-1.  Clone this repo.
-2.  Create a copy of the file `.env.sample` and rename it to `.env`.
-3.  Put relevant data in the `.env.prod` file -
+1. Clone this repo.
+2. Create a copy of the file `.env.sample` and rename it to `.env`.
+3. Put relevant data in the `.env.prod` file -
 
 ```env
-DISCORD_CLIENT_ID = insert client ID
-DISCORD_TOKEN = insert bot token
-DISCORD_GUILD_ID = insert test server ID
+CLIENT_ID = insert client ID
+TOKEN = insert bot token
+GUILD_ID = insert test server ID
 ```
 
-3.  Install dependencies by using `npm install`.
-4.  Use `npm start` to run the bot code.
+4. Install dependencies by using `npm install`.
+5. Use `npm docker` to run the bot code.
 
 For more info click [here](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot) & [here](https://discordjs.guide/creating-your-bot/)
 
