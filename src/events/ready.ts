@@ -1,9 +1,8 @@
 import { GatewayClientEvents } from 'detritus-client';
 import { ActivityTypes, ClientEvents } from 'detritus-client/lib/constants';
+import { version } from '../../package.json';
 import BotEvent from '../lib/BotEvent';
 import EnvConfig from '../lib/EnvConfig';
-
-const { version } = require('../../package.json');
 
 export default new BotEvent({
   event: ClientEvents.GATEWAY_READY,
@@ -46,17 +45,15 @@ export default new BotEvent({
         type: ActivityTypes.LISTENING,
       },
     ];
-    // const delay = 30000;
-    // shardClient.user?.presence?.activity = activities[0];
-    // console.log(activities);
-    /*
-    client.user.setActivity(activities[0].name, activities[0].obj);
-    // console.log('Activities:\n', activities[2].name, activities[2].obj);
+    shardClient.gateway.setPresence({
+      activity: activities[0],
+    });
+    const delay = 30000;
+
     setInterval(() => {
       const act = activities[Math.floor(Math.random() * activities.length)];
       console.log(act);
-      client.user.setActivity(act.name, act.obj);
+      shardClient.gateway.setPresence({ activity: act });
     }, delay);
-    */
   },
 });
