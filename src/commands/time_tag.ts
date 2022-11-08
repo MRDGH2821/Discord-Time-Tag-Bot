@@ -55,6 +55,7 @@ export default new InteractionCommand({
       name: 'meridian',
       description: 'Enter format type',
       type: ApplicationCommandOptionTypes.STRING,
+      required: true,
       choices: [
         {
           name: '12 hour - am',
@@ -202,10 +203,10 @@ export default new InteractionCommand({
     );
     const epoch = dayObj.unix();
     const time = `${args.hours}:${args.minutes}`;
-
+    console.log({ dayObj, args, epoch });
     if (args.tag_type !== 'let_me_see') {
       return ctx.editOrRespond({
-        content: `\`${timestamp(epoch, args.tag_type!)}\``,
+        content: `\`${timestamp(dayObj.toDate(), args.tag_type!)}\``,
       });
     }
     const format14Row = new ComponentActionRow()
@@ -214,7 +215,7 @@ export default new InteractionCommand({
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
           await btnCtx.createMessage({
-            content: timestamp(epoch, MarkupTimestampStyles.BOTH_LONG),
+            content: timestamp(dayObj.toDate(), MarkupTimestampStyles.BOTH_LONG),
           });
         },
       })
@@ -223,7 +224,7 @@ export default new InteractionCommand({
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
           await btnCtx.createMessage({
-            content: timestamp(epoch, MarkupTimestampStyles.BOTH_SHORT),
+            content: timestamp(dayObj.toDate(), MarkupTimestampStyles.BOTH_SHORT),
           });
         },
       })
@@ -232,7 +233,7 @@ export default new InteractionCommand({
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
           await btnCtx.createMessage({
-            content: timestamp(epoch, MarkupTimestampStyles.DATE_LONG),
+            content: timestamp(dayObj.toDate(), MarkupTimestampStyles.DATE_LONG),
           });
         },
       })
@@ -241,7 +242,7 @@ export default new InteractionCommand({
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
           await btnCtx.createMessage({
-            content: timestamp(epoch, MarkupTimestampStyles.DATE_SHORT),
+            content: timestamp(dayObj.toDate(), MarkupTimestampStyles.DATE_SHORT),
           });
         },
       });
@@ -252,7 +253,7 @@ export default new InteractionCommand({
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
           await btnCtx.createMessage({
-            content: timestamp(epoch, MarkupTimestampStyles.TIME_LONG),
+            content: timestamp(dayObj.toDate(), MarkupTimestampStyles.TIME_LONG),
           });
         },
       })
@@ -261,7 +262,7 @@ export default new InteractionCommand({
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
           await btnCtx.createMessage({
-            content: timestamp(epoch, MarkupTimestampStyles.TIME_SHORT),
+            content: timestamp(dayObj.toDate(), MarkupTimestampStyles.TIME_SHORT),
           });
         },
       })
@@ -270,7 +271,7 @@ export default new InteractionCommand({
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
           await btnCtx.createMessage({
-            content: timestamp(epoch, MarkupTimestampStyles.RELATIVE),
+            content: timestamp(dayObj.toDate(), MarkupTimestampStyles.RELATIVE),
           });
         },
       })
@@ -292,50 +293,50 @@ export default new InteractionCommand({
         },
         {
           name: 'Format 1',
-          value: `\`${timestamp(epoch, MarkupTimestampStyles.BOTH_LONG)}\` ${timestamp(
-            epoch,
+          value: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.BOTH_LONG)}\` ${timestamp(
+            dayObj.toDate(),
             MarkupTimestampStyles.BOTH_LONG,
           )}`,
         },
         {
           name: 'Format 2',
-          value: `\`${timestamp(epoch, MarkupTimestampStyles.BOTH_SHORT)}\` ${timestamp(
-            epoch,
+          value: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.BOTH_SHORT)}\` ${timestamp(
+            dayObj.toDate(),
             MarkupTimestampStyles.BOTH_SHORT,
           )}`,
         },
         {
           name: 'Format 3',
-          value: `\`${timestamp(epoch, MarkupTimestampStyles.DATE_LONG)}\` ${timestamp(
-            epoch,
+          value: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.DATE_LONG)}\` ${timestamp(
+            dayObj.toDate(),
             MarkupTimestampStyles.DATE_LONG,
           )}`,
         },
         {
           name: 'Format 4',
-          value: `\`${timestamp(epoch, MarkupTimestampStyles.DATE_SHORT)}\` ${timestamp(
-            epoch,
+          value: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.DATE_SHORT)}\` ${timestamp(
+            dayObj.toDate(),
             MarkupTimestampStyles.DATE_SHORT,
           )}`,
         },
         {
           name: 'Format 5',
-          value: `\`${timestamp(epoch, MarkupTimestampStyles.TIME_LONG)}\` ${timestamp(
-            epoch,
+          value: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.TIME_LONG)}\` ${timestamp(
+            dayObj.toDate(),
             MarkupTimestampStyles.TIME_LONG,
           )}`,
         },
         {
           name: 'Format 6',
-          value: `\`${timestamp(epoch, MarkupTimestampStyles.TIME_SHORT)}\` ${timestamp(
-            epoch,
+          value: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.TIME_SHORT)}\` ${timestamp(
+            dayObj.toDate(),
             MarkupTimestampStyles.TIME_SHORT,
           )}`,
         },
         {
           name: 'Format 7',
-          value: `\`${timestamp(epoch, MarkupTimestampStyles.RELATIVE)}\` ${timestamp(
-            epoch,
+          value: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.RELATIVE)}\` ${timestamp(
+            dayObj.toDate(),
             MarkupTimestampStyles.RELATIVE,
           )}`,
         },

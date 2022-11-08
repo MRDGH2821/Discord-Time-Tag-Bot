@@ -45,18 +45,15 @@ export default new InteractionCommand({
   ],
 
   async run(ctx, args: CountDownArgs) {
-    const date = dayjs();
-    date.add(args);
+    const date = dayjs().add(args);
     /*
     date.add(args.hours!, 'hours');
     date.add(args.minutes!, 'minutes');
   */
 
-    const unixTime = date.unix();
-
     ctx.editOrRespond({
-      content: `${timestamp(unixTime, MarkupTimestampStyles.RELATIVE)} (${timestamp(
-        unixTime,
+      content: `${timestamp(date.toDate(), MarkupTimestampStyles.RELATIVE)} (${timestamp(
+        date.toDate(),
         MarkupTimestampStyles.BOTH_LONG,
       )})`,
     });
