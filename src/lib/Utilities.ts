@@ -1,3 +1,5 @@
+import { getTimeZones } from '@vvo/tzdb';
+
 export function offSetMinutesToClock(minute: number) {
   let mins = minute;
   const sign = mins < 0 ? '-' : '+';
@@ -18,9 +20,19 @@ export function hourMinuteToClock(h: number, m: number) {
 }
 
 export function encodeInvalid(str: string) {
-  return str.replace('/', '_-_');
+  return str.replace('/', '_').toLowerCase();
 }
 
 export function decodeInvalid(str: string) {
-  return str.replace('_-_', '/');
+  return str.replace('_', '/');
+}
+
+export const timeZones = getTimeZones({ includeUtc: true });
+
+export function searchTZ(input: string) {
+  return timeZones.filter((timeZone) => {
+    const arr = Object.values(timeZone).flat().join(' ');
+    console.log(arr.includes(input));
+    return arr.includes(input);
+  });
 }
