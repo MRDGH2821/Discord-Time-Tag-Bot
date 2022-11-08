@@ -37,7 +37,8 @@
     "@vvo/tzdb": "^6.75.0",
     "dayjs": "^1.10.7",
     "detritus-client": "^0.17.0-beta.16",
-    "detritus-client-rest": "^0.11.0-beta.4"
+    "detritus-client-rest": "^0.11.0-beta.4",
+    "tslib": "^2.4.1"
   },
   "devDependencies": {
     "@swc/core": "^1.3.14",
