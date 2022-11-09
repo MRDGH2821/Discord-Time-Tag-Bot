@@ -1,10 +1,11 @@
+import { RequestTypes } from 'detritus-client-rest';
 import {
   ApplicationCommandOptionTypes,
   MessageComponentButtonStyles,
 } from 'detritus-client/lib/constants';
 import { InteractionCommandOptionOptions } from 'detritus-client/lib/interaction';
 import { ComponentActionRow } from 'detritus-client/lib/utils';
-import { encodeInvalid, offSetMinutesToClock, searchTZ } from './Utilities';
+import { offSetMinutesToClock, searchTZ } from './Utilities';
 
 export const bkpRow = new ComponentActionRow().addButton({
   label: 'Backup Time Tag Generator',
@@ -34,19 +35,17 @@ export const utcOption: InteractionCommandOptionOptions = {
     console.log({ input, actual: ctx.value });
     const foundTZ = searchTZ(input);
 
-    const parsedTZ = foundTZ
+    const parsedTZ: RequestTypes.CreateInteractionResponseInnerPayload['choices'] = foundTZ
       .map((timeZone) => ({
-        name: encodeInvalid(
-          `${encodeInvalid(timeZone.name)} ${timeZone.abbreviation} ${offSetMinutesToClock(
-            timeZone.rawOffsetInMinutes,
-          )}`,
-        ),
+        name: `${timeZone.name} ${timeZone.abbreviation} (${offSetMinutesToClock(
+          timeZone.rawOffsetInMinutes,
+        )} i.e. ${timeZone.rawOffsetInMinutes} minutes)`,
         value: timeZone.rawOffsetInMinutes,
       }))
       .slice(0, 23);
 
     parsedTZ.push({
-      name: '+00:00 Coordinated Universal Time (UTC)',
+      name: 'Not found? Type some more or type offset in minutes (-01:30 becomes -90). Or select me for UTC +0',
       value: 0,
     });
     console.log({ found: foundTZ.length, parsedTZ });
