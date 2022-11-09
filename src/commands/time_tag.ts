@@ -6,6 +6,7 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import {
   ApplicationCommandOptionTypes,
+  InteractionCallbackTypes,
   MarkupTimestampStyles,
   MessageComponentButtonStyles,
 } from 'detritus-client/lib/constants';
@@ -221,8 +222,8 @@ export default new InteractionCommand({
         label: 'Format 1',
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
-          await btnCtx.createMessage({
-            content: timestamp(dayObj.toDate(), MarkupTimestampStyles.BOTH_LONG),
+          await btnCtx.respond(InteractionCallbackTypes.CHANNEL_MESSAGE_WITH_SOURCE, {
+            content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.BOTH_LONG)}\``,
           });
         },
       })
@@ -231,7 +232,7 @@ export default new InteractionCommand({
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
           await btnCtx.createMessage({
-            content: timestamp(dayObj.toDate(), MarkupTimestampStyles.BOTH_SHORT),
+            content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.BOTH_SHORT)}\``,
           });
         },
       })
@@ -240,7 +241,7 @@ export default new InteractionCommand({
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
           await btnCtx.createMessage({
-            content: timestamp(dayObj.toDate(), MarkupTimestampStyles.DATE_LONG),
+            content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.DATE_LONG)}\``,
           });
         },
       })
@@ -249,7 +250,7 @@ export default new InteractionCommand({
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
           await btnCtx.createMessage({
-            content: timestamp(dayObj.toDate(), MarkupTimestampStyles.DATE_SHORT),
+            content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.DATE_SHORT)}\``,
           });
         },
       });
@@ -260,7 +261,7 @@ export default new InteractionCommand({
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
           await btnCtx.createMessage({
-            content: timestamp(dayObj.toDate(), MarkupTimestampStyles.TIME_LONG),
+            content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.TIME_LONG)}\``,
           });
         },
       })
@@ -269,7 +270,7 @@ export default new InteractionCommand({
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
           await btnCtx.createMessage({
-            content: timestamp(dayObj.toDate(), MarkupTimestampStyles.TIME_SHORT),
+            content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.TIME_SHORT)}\``,
           });
         },
       })
@@ -278,7 +279,7 @@ export default new InteractionCommand({
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
           await btnCtx.createMessage({
-            content: timestamp(dayObj.toDate(), MarkupTimestampStyles.RELATIVE),
+            content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.RELATIVE)}\``,
           });
         },
       })
