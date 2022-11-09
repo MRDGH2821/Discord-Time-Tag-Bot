@@ -211,9 +211,10 @@ export default new InteractionCommand({
     }`;
     console.log({ dayObj, args });
     if (args.tag_type !== 'let_me_see') {
-      return ctx.editOrRespond({
+      await ctx.editOrRespond({
         content: `\`${timestamp(dayObj.toDate(), args.tag_type!)}\``,
       });
+      return;
     }
     const format14Row = new ComponentActionRow()
       .addButton({
@@ -351,7 +352,7 @@ export default new InteractionCommand({
       ],
     };
 
-    return ctx.editOrRespond({
+    await ctx.editOrRespond({
       embed: tagOutput,
       components: [format14Row, format57Row],
     });
