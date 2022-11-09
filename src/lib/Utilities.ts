@@ -32,34 +32,9 @@ export const timeZones = getTimeZones({ includeUtc: true });
 export function searchTZ(input: string) {
   console.log({ searching: input });
   const results = timeZones.filter((timeZone) => {
-    const condition = timeZone.abbreviation.includes(input)
-      || timeZone.alternativeName.includes(input)
-      || timeZone.continentCode.includes(input)
-      || timeZone.continentName.includes(input)
-      || timeZone.countryCode.includes(input)
-      || timeZone.countryName.includes(input)
-      || timeZone.name.includes(input)
-      || timeZone.rawFormat.includes(input);
-    // console.log({ condition });
-
-    const condition2 = timeZone.group.flat().some((tz) => tz.includes(input));
-    // console.log({ condition2 });
-
-    const condition3 = timeZone.mainCities.flat().some((tz) => tz.includes(input));
-    // console.log({ condition3 });
-
-    const condition4 = timeZone.rawOffsetInMinutes.toString().includes(input);
-    // console.log({ condition4 });
-    /*
-    const condition5 = Object.values(timeZone)
-      .flat()
-      .some((tz) => tz.includes(input));
-    console.log({ condition5 });
-    */
-    if (condition || condition2 || condition3 || condition4) {
-      console.log(condition || condition2 || condition3 || condition4);
-    }
-    return condition || condition2 || condition3 || condition4;
+    const str = JSON.stringify(timeZone).toString().toLowerCase();
+    const matches = str.match(input);
+    return !!matches;
   });
   console.log({ resultsFound: results.length });
   return results;
