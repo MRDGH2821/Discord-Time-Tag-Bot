@@ -6,7 +6,6 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import {
   ApplicationCommandOptionTypes,
-  InteractionCallbackTypes,
   MarkupTimestampStyles,
   MessageComponentButtonStyles,
 } from 'detritus-client/lib/constants';
@@ -221,67 +220,46 @@ export default new InteractionCommand({
       .addButton({
         label: 'Format 1',
         style: MessageComponentButtonStyles.SECONDARY,
-        async run(btnCtx) {
-          await btnCtx.respond(InteractionCallbackTypes.CHANNEL_MESSAGE_WITH_SOURCE, {
-            content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.BOTH_LONG)}\``,
-          });
-        },
+        custom_id: `format1-F-${dayObj.unix()}`,
+        customId: `format1-F-${dayObj.unix()}`,
       })
       .addButton({
         label: 'Format 2',
         style: MessageComponentButtonStyles.SECONDARY,
-        async run(btnCtx) {
-          await btnCtx.respond(InteractionCallbackTypes.CHANNEL_MESSAGE_WITH_SOURCE, {
-            content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.BOTH_SHORT)}\``,
-          });
-        },
+        custom_id: `format2-f-${dayObj.unix()}`,
+        customId: `format2-f-${dayObj.unix()}`,
       })
       .addButton({
         label: 'Format 3',
         style: MessageComponentButtonStyles.SECONDARY,
-        async run(btnCtx) {
-          await btnCtx.respond(InteractionCallbackTypes.CHANNEL_MESSAGE_WITH_SOURCE, {
-            content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.DATE_LONG)}\``,
-          });
-        },
+        custom_id: `format3-D-${dayObj.unix()}`,
+        customId: `format3-D-${dayObj.unix()}`,
       })
       .addButton({
         label: 'Format 4',
         style: MessageComponentButtonStyles.SECONDARY,
-        async run(btnCtx) {
-          await btnCtx.respond(InteractionCallbackTypes.CHANNEL_MESSAGE_WITH_SOURCE, {
-            content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.DATE_SHORT)}\``,
-          });
-        },
+        custom_id: `format4-d-${dayObj.unix()}`,
+        customId: `format4-d-${dayObj.unix()}`,
       });
 
     const format57Row = new ComponentActionRow()
       .addButton({
         label: 'Format 5',
         style: MessageComponentButtonStyles.SECONDARY,
-        async run(btnCtx) {
-          await btnCtx.respond(InteractionCallbackTypes.CHANNEL_MESSAGE_WITH_SOURCE, {
-            content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.TIME_LONG)}\``,
-          });
-        },
+        custom_id: `format5-T-${dayObj.unix()}`,
+        customId: `format5-T-${dayObj.unix()}`,
       })
       .addButton({
         label: 'Format 6',
         style: MessageComponentButtonStyles.SECONDARY,
-        async run(btnCtx) {
-          await btnCtx.respond(InteractionCallbackTypes.CHANNEL_MESSAGE_WITH_SOURCE, {
-            content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.TIME_SHORT)}\``,
-          });
-        },
+        custom_id: `format6-t-${dayObj.unix()}`,
+        customId: `format6-t-${dayObj.unix()}`,
       })
       .addButton({
         label: 'Format 7',
         style: MessageComponentButtonStyles.SECONDARY,
-        async run(btnCtx) {
-          await btnCtx.respond(InteractionCallbackTypes.CHANNEL_MESSAGE_WITH_SOURCE, {
-            content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.RELATIVE)}\``,
-          });
-        },
+        custom_id: `format7-R-${dayObj.unix()}`,
+        customId: `format7-R-${dayObj.unix()}`,
       })
       .addButton({
         label: 'Hammer Time website',
