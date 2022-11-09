@@ -231,7 +231,7 @@ export default new InteractionCommand({
         label: 'Format 2',
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
-          await btnCtx.createMessage({
+          await btnCtx.respond(InteractionCallbackTypes.CHANNEL_MESSAGE_WITH_SOURCE, {
             content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.BOTH_SHORT)}\``,
           });
         },
@@ -240,7 +240,7 @@ export default new InteractionCommand({
         label: 'Format 3',
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
-          await btnCtx.createMessage({
+          await btnCtx.respond(InteractionCallbackTypes.CHANNEL_MESSAGE_WITH_SOURCE, {
             content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.DATE_LONG)}\``,
           });
         },
@@ -249,7 +249,7 @@ export default new InteractionCommand({
         label: 'Format 4',
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
-          await btnCtx.createMessage({
+          await btnCtx.respond(InteractionCallbackTypes.CHANNEL_MESSAGE_WITH_SOURCE, {
             content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.DATE_SHORT)}\``,
           });
         },
@@ -260,7 +260,7 @@ export default new InteractionCommand({
         label: 'Format 5',
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
-          await btnCtx.createMessage({
+          await btnCtx.respond(InteractionCallbackTypes.CHANNEL_MESSAGE_WITH_SOURCE, {
             content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.TIME_LONG)}\``,
           });
         },
@@ -269,7 +269,7 @@ export default new InteractionCommand({
         label: 'Format 6',
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
-          await btnCtx.createMessage({
+          await btnCtx.respond(InteractionCallbackTypes.CHANNEL_MESSAGE_WITH_SOURCE, {
             content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.TIME_SHORT)}\``,
           });
         },
@@ -278,7 +278,7 @@ export default new InteractionCommand({
         label: 'Format 7',
         style: MessageComponentButtonStyles.SECONDARY,
         async run(btnCtx) {
-          await btnCtx.createMessage({
+          await btnCtx.respond(InteractionCallbackTypes.CHANNEL_MESSAGE_WITH_SOURCE, {
             content: `\`${timestamp(dayObj.toDate(), MarkupTimestampStyles.RELATIVE)}\``,
           });
         },
