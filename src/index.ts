@@ -2,7 +2,6 @@ import { ClusterClient, InteractionCommandClient } from 'detritus-client';
 import interactionCreate from './events/interactionCreate';
 import ready from './events/ready';
 import timeButtons from './events/timeButtons';
-import timeMessage from './events/timeMessage';
 import EnvConfig from './lib/EnvConfig';
 
 (async () => {
@@ -14,7 +13,6 @@ import EnvConfig from './lib/EnvConfig';
   clusterBot.on(ready.event, ready.listener);
   clusterBot.on(interactionCreate.event, interactionCreate.listener);
   clusterBot.on(timeButtons.event, timeButtons.listener);
-  clusterBot.on(timeMessage.event, timeMessage.listener);
 
   await clusterBot.run();
 

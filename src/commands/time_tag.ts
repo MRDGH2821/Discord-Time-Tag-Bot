@@ -213,14 +213,6 @@ export default new InteractionCommand({
     if (args.tag_type !== 'let_me_see') {
       await ctx.editOrRespond({
         content: `\`${timestamp(dayObj.toDate(), args.tag_type!)}\``,
-        components: [
-          new ComponentActionRow().addButton({
-            label: 'Send as message?',
-            style: MessageComponentButtonStyles.PRIMARY,
-            custom_id: `sendMessage-${args.tag_type!}-${dayObj.unix()}`,
-            customId: `sendMessage-${args.tag_type!}-${dayObj.unix()}`,
-          }),
-        ],
       });
       return;
     }
