@@ -1,11 +1,11 @@
-import { MessageComponentButtonStyles } from 'detritus-client/lib/constants';
+/* eslint-disable max-len */
 import { InteractionCommand } from 'detritus-client/lib/interaction';
-import { ComponentActionRow } from 'detritus-client/lib/utils';
+import { version } from '../../package.json';
 import { SimpleEmbed } from '../botTypes/interfaces';
-import { COLORS, HAMMER_TIME_LINK, SUPPORT_INVITE } from '../lib/Constants';
+import { COLORS } from '../lib/Constants';
+import { viewPages } from '../lib/Utilities';
 
-import { bugs, homepage, version } from '../../package.json';
-
+/*
 const helpEmbed: SimpleEmbed = {
   color: COLORS.EMBED_COLOR,
   title: 'Help Section',
@@ -56,28 +56,7 @@ const helpEmbed: SimpleEmbed = {
     },
   ],
 };
-const row = new ComponentActionRow()
-  .addButton({
-    label: 'Join Support Server',
-    style: MessageComponentButtonStyles.LINK,
-    url: SUPPORT_INVITE,
-  })
-  .addButton({
-    label: 'Hammer Time Website (Unaffiliated)',
-    style: MessageComponentButtonStyles.LINK,
-    url: HAMMER_TIME_LINK,
-  })
-  .addButton({
-    label: 'Source Code',
-    style: MessageComponentButtonStyles.LINK,
-    url: homepage,
-  })
-  .addButton({
-    label: 'Invite Bot in your server!',
-    style: MessageComponentButtonStyles.LINK,
-    url: 'https://discord.com/api/oauth2/authorize?client_id=890243200579694672&permissions=274878188544&scope=bot%20applications.commands',
-  });
-
+*/
 export default new InteractionCommand({
   name: 'help',
   description: 'The help section to get you started!',
@@ -86,10 +65,56 @@ export default new InteractionCommand({
   metadata: {
     help: "This is help command, where you can view individual command's usage",
   },
-  run(ctx) {
-    ctx.editOrRespond({
-      embed: helpEmbed,
-      components: [row],
+
+  async run(ctx) {
+    const commands = [
+      {
+        name: 'count_down',
+        description: 'Generates a countdown tag!',
+        metadata: {
+          help: 'Enter hours & minutes from now for a countdown. For more control over time, use /time_tag command',
+        },
+      },
+      {
+        name: 'help',
+        description: 'The help section to get you started!',
+        metadata: {
+          help: "This is help command, where you can view individual command's usage",
+        },
+      },
+      {
+        name: 'ping',
+        description: 'Shows bot ping',
+        metadata: {
+          help: 'Shows bot ping',
+        },
+      },
+      {
+        name: 'time_tag',
+        description: 'Generates Time tag! (Default in UTC)',
+        metadata: {
+          help: `Enter Hours, Minutes, Year (optional), Month (optional), Date (optional), Timezone (optional) & Tag type (optional) to get a time tag.\n\nYear, Month, Date if not provided, take values as per today's date by default. \nCurrent default as per UTC+0 - ${new Date().toUTCString()}. \nDefault Timezone is UTC +00:00. \nTag type is optional, but if provided, will directly give you the tag. \n\n\nNote: the \`utc\` parameter takes in timezone offset (in minutes). So you can directly put offset in minutes. For example your timezone is UTC +05:30, then the offset in minutes will be \`5*60 + 30 = 330\`.\nIf it is UTC -09:45, then offset is \`(-9)*60 + 45 = (-495)\`\nYou can directly enter offset (without brackets) in \`utc\` parameter by this way.`,
+        },
+      },
+    ];
+    const pages: SimpleEmbed[] = [];
+    commands?.forEach((command) => {
+      pages.push({
+        title: `**${command.name}**`,
+        color: COLORS.EMBED_COLOR,
+        description: command.description,
+        fields: [
+          {
+            name: 'Help section',
+            value: command.metadata.help,
+          },
+        ],
+        footer: {
+          text: `Bot version: ${version}`,
+        },
+      });
     });
+    const pager = viewPages(pages);
+    await pager(ctx);
   },
 });
