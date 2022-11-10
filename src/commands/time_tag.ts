@@ -209,7 +209,7 @@ export default new InteractionCommand({
     const time = `${hourMinuteToClock(args.hours!, args.minutes!)} ${
       args.meridian === 'h24' ? '(24-hr)' : args.meridian
     }`;
-    console.log({ dayObj, args });
+    // console.log({ dayObj, args });
     if (args.tag_type !== 'let_me_see') {
       await ctx.editOrRespond({
         content: `\`${timestamp(dayObj.toDate(), args.tag_type!)}\``,
