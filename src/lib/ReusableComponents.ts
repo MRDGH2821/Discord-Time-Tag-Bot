@@ -5,6 +5,8 @@ import {
 } from 'detritus-client/lib/constants';
 import { InteractionCommandOptionOptions } from 'detritus-client/lib/interaction';
 import { ComponentActionRow } from 'detritus-client/lib/utils';
+import { homepage } from '../../package.json';
+import { HAMMER_TIME_LINK, SUPPORT_INVITE } from './Constants';
 import { offSetMinutesToClock, searchTZ } from './Utilities';
 
 export const bkpRow = new ComponentActionRow().addButton({
@@ -23,6 +25,28 @@ export const errRow = new ComponentActionRow()
     label: 'Backup Time Tag Generator',
     style: MessageComponentButtonStyles.LINK,
     url: 'https://hammertime.djdavid98.art/',
+  });
+
+export const supportRow = new ComponentActionRow()
+  .addButton({
+    label: 'Join Support Server',
+    style: MessageComponentButtonStyles.LINK,
+    url: SUPPORT_INVITE,
+  })
+  .addButton({
+    label: 'Hammer Time Website (Unaffiliated)',
+    style: MessageComponentButtonStyles.LINK,
+    url: HAMMER_TIME_LINK,
+  })
+  .addButton({
+    label: 'Source Code',
+    style: MessageComponentButtonStyles.LINK,
+    url: homepage,
+  })
+  .addButton({
+    label: 'Invite Bot in your server!',
+    style: MessageComponentButtonStyles.LINK,
+    url: 'https://discord.com/api/oauth2/authorize?client_id=890243200579694672&permissions=274878188544&scope=bot%20applications.commands',
   });
 
 export const utcOption: InteractionCommandOptionOptions = {
