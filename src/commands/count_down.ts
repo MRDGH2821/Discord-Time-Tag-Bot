@@ -26,7 +26,9 @@ export default new InteractionCommand({
   description: 'Generates a countdown tag!',
   global: true,
   disableDm: false,
-
+  metadata: {
+    help: 'Enter hours & minutes from now for a countdown. For more control over time, use /time_tag command',
+  },
   options: [
     {
       name: 'hours',

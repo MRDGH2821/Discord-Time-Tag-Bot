@@ -7,7 +7,9 @@ export default new InteractionCommand({
   description: 'Shows bot ping',
   global: true,
   disableDm: false,
-
+  metadata: {
+    help: 'Shows bot ping',
+  },
   async run(context) {
     const { gateway, rest } = await context.client.ping();
 

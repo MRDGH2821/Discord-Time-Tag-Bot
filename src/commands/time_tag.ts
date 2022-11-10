@@ -37,6 +37,10 @@ export default new InteractionCommand({
   description: 'Generates Time tag! (Default in UTC)',
   global: true,
   disableDm: false,
+  metadata: {
+    // eslint-disable-next-line no-useless-escape
+    help: `Enter Hours, Minutes, Year (optional), Month (optional), Date (optional), Timezone (optional) & Tag type (optional) to get a time tag.\n\nYear, Month, Date have default value as per today's date (Current default as per UTC+0 - ${new Date().toUTCString()}). \nDefault Timezone is UTC +00:00. \nTag type is optional. \n\n\nNote: the \`utc\` parameter takes in timezone offset (in minutes). So you can directly put offset in minutes. For example your timezone is UTC +05:30, then the offset in minutes will be 5\*60 + 30 = 330.\nIf it is UTC -09:45, then offset is (-9)\*60 + 45 = (-495)\nYou can directly enter offset (without brackets) in \`utc\` parameter by this way.`,
+  },
   options: [
     {
       name: 'hours',
@@ -84,7 +88,7 @@ export default new InteractionCommand({
     },
     {
       name: 'month',
-      description: 'Enter month in MM format (default current month as per UTC)',
+      description: 'Select month (default current month as per UTC)',
       type: ApplicationCommandOptionTypes.NUMBER,
       choices: [
         {

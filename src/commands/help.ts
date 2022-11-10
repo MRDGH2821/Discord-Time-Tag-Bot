@@ -83,6 +83,9 @@ export default new InteractionCommand({
   description: 'The help section to get you started!',
   global: true,
   disableDm: false,
+  metadata: {
+    help: "This is help command, where you can view individual command's usage",
+  },
   run(ctx) {
     ctx.editOrRespond({
       embed: helpEmbed,
