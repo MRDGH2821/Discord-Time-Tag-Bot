@@ -1,4 +1,8 @@
 import { getTimeZones } from '@vvo/tzdb';
+import { MessageComponentButtonStyles } from 'detritus-client/lib/constants';
+import { InteractionContext } from 'detritus-client/lib/interaction';
+import { ComponentActionRow, ComponentContext } from 'detritus-client/lib/utils';
+import { SimpleEmbed } from '../botTypes/interfaces';
 
 export function offSetMinutesToClock(minute: number) {
   let mins = minute;
@@ -38,4 +42,40 @@ export function searchTZ(input: string) {
   });
   console.log({ resultsFound: results.length });
   return results;
+}
+
+export function viewPages(embeds: SimpleEmbed[]): Function {
+  return async function next(ctx: ComponentContext | InteractionContext, i = 0): Promise<unknown> {
+    if (embeds.length < 1) {
+      return ctx.editOrRespond({
+        content: 'No help pages found',
+        // flags: MessageFlags.EPHEMERAL,
+      });
+    }
+
+    return ctx.editOrRespond({
+      content: embeds[i] ? undefined : '*How about going one step back?*',
+      embed: embeds[i],
+      // flags: MessageFlags.EPHEMERAL,
+      components: [
+        new ComponentActionRow()
+          .addButton({
+            label: 'Previous',
+            emoji: '⬅️',
+            style: MessageComponentButtonStyles.SECONDARY,
+            run(btnCtx) {
+              next(btnCtx, i >= 0 ? i - 1 : i);
+            },
+          })
+          .addButton({
+            label: 'Next',
+            emoji: '➡️',
+            style: MessageComponentButtonStyles.PRIMARY,
+            run(btnCtx) {
+              next(btnCtx, i < embeds.length ? i + 1 : i);
+            },
+          }),
+      ],
+    });
+  };
 }
