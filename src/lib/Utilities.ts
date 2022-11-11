@@ -23,15 +23,7 @@ export function hourMinuteToClock(h: number, m: number) {
   return `${hours}:${minutes}`;
 }
 
-export function encodeInvalid(str: string) {
-  return str.replace('/', '_').toLowerCase();
-}
-
-export function decodeInvalid(str: string) {
-  return str.replace('_', '/');
-}
-
-export const timeZones = getTimeZones({ includeUtc: true });
+const timeZones = getTimeZones({ includeUtc: true });
 
 export function searchTZ(input: string) {
   console.log({ searching: input });

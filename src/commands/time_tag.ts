@@ -198,8 +198,6 @@ export default new InteractionCommand({
   async run(ctx, args: TimeTagArgs) {
     const newHours = args.meridian === 'pm' ? args.hours! + 12 : args.hours!;
 
-    // const decodedTZ = decodeInvalid(args.utc!);
-    // const tz = searchTZ(decodedTZ).length > 0 || searchTZ(args.utc!).length > 0 ? decodedTZ : '0'
     const timeZone = args.utc!;
     // dayjs.tz.setDefault(timeZone.toString());
     const dayObj = dayjs({
