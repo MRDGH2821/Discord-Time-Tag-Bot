@@ -5,3 +5,5 @@ node_modules
 betaconfig.json
 .env.dev
 deploy-stats.txt
+out/*
+megalinter-reports/

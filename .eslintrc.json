@@ -1,37 +1,9 @@
 {
-  "extends": "eslint:all",
-  "env": {
-    "node": true,
-    "es6": true
-  },
+  "extends": ["eslint-config-airbnb-base", "eslint-config-airbnb-typescript/base"],
   "parserOptions": {
-    "ecmaVersion": 2021
+    "project": ["tsconfig.json", "tsconfig.eslint.json"]
   },
   "rules": {
-    "strict": "off",
-    "indent": ["error", 2],
-    "no-console": "off",
-    "max-len": "off",
-    "quotes": ["error", "single"],
-    "capitalized-comments": ["error", "never"],
-    "max-lines-per-function": ["off"],
-    "camelcase": "off",
-    "max-statements": ["off"],
-    "object-curly-spacing": ["error", "always"],
-    "quote-props": ["error", "consistent-as-needed"],
-    "dot-location": ["error", "property"],
-    "no-extra-parens": "off",
-    "space-before-function-paren": ["error", "never"],
-    "function-call-argument-newline": ["error", "consistent"],
-    "func-style": ["error", "declaration", { "allowArrowFunctions": true }],
-    "prefer-named-capture-group": "off",
-    "brace-style": ["error", "stroustrup"],
-    "no-magic-numbers": [
-      "error",
-      { "ignoreArrayIndexes": true, "ignoreDefaultValues": true }
-    ],
-    "no-await-in-loop": "warn",
-    "padded-blocks": ["error", "never"],
-    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
+    "no-console": "off"
   }
 }
